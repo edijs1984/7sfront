@@ -109,7 +109,7 @@ const CreateUserModal = ({ openModal, modalManage, setPosts }) => {
               control={control}
             />
           </Form.Group>
-          <label>Place:</label>
+          <label>Working Place:</label>
           <Form.Group inline>
             <CustomDropdown
               api={"/api/plant/all/department"}
