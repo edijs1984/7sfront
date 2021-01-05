@@ -143,11 +143,11 @@ const CreateUserModal = ({ openModal, modalManage, setPosts }) => {
 
           {maneger === true ? (
             <div>
-              <label>Select Place:</label>
+              <label>Select Place User is responsible for:</label>
               <Form.Group inline>
                 <CustomDropdown
                   api={"/api/plant/all/department"}
-                  placeholders={"Department"}
+                  placeholders={"Place"}
                   setValue={(value) => setSelectedDep(value.name)}
                   jsonName2="departmentName"
                   jsonName="departmentName"
