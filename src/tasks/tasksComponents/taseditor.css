@@ -1,0 +1,93 @@
+.margintop {
+  margin-top: 30px;
+}
+
+.inputsize {
+  width: 30%;
+  height: 20%;
+  border: none;
+  background-color: wheat;
+  resize: none;
+  border-radius: 1%;
+  font-size: 15px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.boxname {
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding-bottom: 10px;
+  font-weight: 500;
+}
+.cause {
+  width: 30%;
+  height: 5%;
+  border: none;
+  background-color: wheat;
+  resize: none;
+  border-radius: 1%;
+  font-size: 15px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.button {
+  padding-top: 20px;
+  float: right;
+  padding-right: 15px;
+}
+.button1 {
+  padding-top: 20px;
+  float: right;
+}
+
+.pagename {
+  font-size: 25px;
+  font-family: sans-serif;
+  padding-bottom: 30px;
+  font-weight: 500;
+  text-shadow: chocolate;
+}
+.date {
+  border: none;
+  padding-left: 0px;
+  inset-block: unset;
+}
+
+/* taskcomponent */
+.headercolor {
+  background-color: chocolate;
+}
+.tablefromtop {
+  margin-top: 0px;
+}
+/* task menu */
+.menutop {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* searchdropdown  */
+
+.marginleft {
+  margin-right: 5px;
+}
+
+.divinline {
+  flex-direction: row;
+}
+
+.buttonmargin {
+  margin-left: 5px;
+}
+
+.buttonleftmargin {
+  margin-left: 12px;
+}
+
+.nametext {
+  font-size: xx-large;
+  margin-right: 30px;
+  margin-left: 30px;
+  font-style: normal;
+  font-weight: bolder;
+  color: grey;
+}
