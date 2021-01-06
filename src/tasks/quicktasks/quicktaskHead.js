@@ -6,13 +6,13 @@ import CustomDatePicker from "../../comonComponents/CustomDatePicker";
 import { Icon } from "semantic-ui-react";
 import CustomStatusFilter from "../../comonComponents/CustomStatusFilter";
 
-const QuickTaskHead = ({ filter, updateList, settingsModal,createModal }) => {
+const QuickTaskHead = ({ filter, updateList, settingsModal, createModal }) => {
   const ContainerStyle = {
     display: "flex",
     justifyContent: "flex-end",
     flex: 1,
     marginBottom: "1%",
-    marginRight:"1.5%"
+    marginRight: "1.5%",
   };
   const [department, setDepartment] = useState("");
   const [Status, setStatus] = useState("");
@@ -37,16 +37,13 @@ const QuickTaskHead = ({ filter, updateList, settingsModal,createModal }) => {
           flexDirection: "row",
         }}
       >
-        <Button onClick={()=>createModal()}>
-        Create
-        </Button>
+        <Button onClick={() => createModal()}>Create</Button>
 
-          <Button style={{marginLeft:"1%"}}onClick={() => settingsModal()}>
-            My main filters
-          </Button>
+        <Button style={{ marginLeft: "1%" }} onClick={() => settingsModal()}>
+          My main filters
+        </Button>
       </div>
-      
-        
+
       <div style={ContainerStyle}>
         {/* <div style={{  marginRight: "1%" }}>
           <Button onClick={() => settingsModal()}>
@@ -93,18 +90,15 @@ const QuickTaskHead = ({ filter, updateList, settingsModal,createModal }) => {
         >
           <h5 style={{ marginTop: "-22%" }}>Filter</h5>
 
-            <Button
-              // variant="dark"
-              onClick={() =>
-                filter({ department, Status, responsible, datums })
-              }
-            >
-              <Icon name="filter" />
-            </Button>
-            <Button variant="danger" onClick={() => resetAll()}>
-              <Icon name="delete" />
-            </Button>
-      
+          <Button
+            // variant="dark"
+            onClick={() => filter({ department, Status, responsible, datums })}
+          >
+            <Icon name="filter" />
+          </Button>
+          <Button variant="danger" onClick={() => resetAll()}>
+            <Icon name="delete" />
+          </Button>
         </div>
       </div>
     </div>

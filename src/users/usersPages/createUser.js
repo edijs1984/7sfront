@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import CreateUserModal from "./createUserModal";
+import CreateUserModal from "../createUser/createUserModal";
 import UserTable from "./userTable";
 import { AuthContext } from "../../context/auth";
 import { apiUrl } from "../../config.json";
@@ -77,11 +77,7 @@ const CreateUser = () => {
       >
         Create User
       </Button>
-      <CreateUserModal
-        openModal={openModal}
-        modalManage={modalManage}
-        setPosts={setPosts}
-      />
+      <CreateUserModal shoWmodal={openModal} closeModal={() => modalManage()} />
       <UserTable
         currentPosts={currentPosts}
         paginate={paginate}

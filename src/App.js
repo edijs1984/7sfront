@@ -13,17 +13,15 @@ import CreateUser from "./users/usersPages/createUser";
 import { AuthProvider } from "../src/context/auth";
 import AuthRoute from "./users/userComponents/authRoutes";
 import AdminRoutes from "./users/userComponents/adminRoutes";
-import NewTask from "./tasks/tasksPages/newTask";
 import { EditTaskProvider } from "./context/editTaskContext";
 import { ToastProvider } from "./context/toastContext";
 import { CustomInputProvider } from "./context/customInputContext";
-import TaskEditor from "./tasks/tasksPages/taskEditor";
 import EditUser from "./users/usersPages/editUser";
 import AuditRulles from "./audit/auditPages/auditRulles";
 import Audit from "./audit/auditPages/audit";
 import QuickTask from "./tasks/quicktasks/quicktask";
 import Settings from "./settings/settings";
-import CompanySettings from "./company/companySettings";
+import CompanySettings from "./cp/companySettings";
 import { CompanyProvider } from "./context/companyContetx";
 import SingleAuditResult from "./audit/auditPages/singleAuditResult";
 import { SingleAuditProvider } from "./context/singleAuditContext";
@@ -49,12 +47,7 @@ const App = () => {
                           exact
                           component={QuickTask}
                         />
-                        <AuthRoute
-                          path="/taskeditor"
-                          exact
-                          component={TaskEditor}
-                        />
-                        <AuthRoute path="/newtask" exact component={NewTask} />
+
                         <AuthRoute
                           path="/dashboard"
                           exact
