@@ -5,7 +5,6 @@ import BootstrapDropdownMultiple from "../../comonComponents/BootstarpDropdownMu
 import { Post, Company } from "../../helpers/axioPost";
 
 const CreateUserModal = ({ shoWmodal, closeModal }) => {
-  const [smShow, setSmShow] = useState(true);
   const [manager, setManager] = useState(false);
   const [admin, setAdmin] = useState(false);
   const [department, setDepartment] = useState("");
