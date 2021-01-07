@@ -3,6 +3,7 @@ import CreateUserModal from "../createUser/createUserModal";
 import UserTable from "./userTable";
 import { Button } from "react-bootstrap";
 import { EditUserContext } from "../../context/editUserContext";
+import EditUserModal from "../editUser/editUserModal";
 const MainUserPage = () => {
   const { allUsers, openCloseCreateUserModal } = useContext(EditUserContext);
 
@@ -26,6 +27,7 @@ const MainUserPage = () => {
         Create User
       </Button>
       <CreateUserModal />
+      <EditUserModal />
       <UserTable
         currentPosts={currentPosts}
         paginate={paginate}

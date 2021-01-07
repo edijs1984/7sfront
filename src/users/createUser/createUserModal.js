@@ -12,6 +12,7 @@ const CreateUserModal = () => {
     createUserModal,
     openCloseCreateUserModal,
     getAllUsers,
+    getAllPlaces,
   } = useContext(EditUserContext);
   const [manager, setManager] = useState(false);
   const [admin, setAdmin] = useState(false);
@@ -38,6 +39,7 @@ const CreateUserModal = () => {
     });
     clearAll();
     getAllUsers();
+    getAllPlaces();
   };
 
   const clearAll = () => {
@@ -60,7 +62,6 @@ const CreateUserModal = () => {
         aria-labelledby="example-modal-sizes-title-sm"
       >
         <Modal.Header closeButton={() => openCloseCreateUserModal()}>
-          {/* <button onClick={() => openCloseUserCreateModal()}>testb</button> */}
           <Modal.Title id="example-modal-sizes-title-sm">
             Create User
           </Modal.Title>

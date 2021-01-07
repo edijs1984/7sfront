@@ -2,16 +2,22 @@ import React, { useState, createContext, useEffect } from "react";
 import { Post, Patch, Company } from "../helpers/axioPost";
 export const EditUserContext = createContext();
 export const EditUserProvider = (props) => {
-  const [editUserData, setEditUserData] = useState({});
+  //common state
   const [allUsers, setAllUsers] = useState([]);
-  const [createUserModal, setCreateUSerModal] = useState(false);
-  const [editUserModal, setEditUserModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState([]);
   const [allPlaces, setAllPlaces] = useState([]);
+  const [selectedUser, setSelectedUser] = useState([]);
   const [placesWithoutManager, setPlacesWithoutManager] = useState([]);
+  //createuser state
+  const [createUserModal, setCreateUSerModal] = useState(false);
+  //edituser state
+  const [editUserModal, setEditUserModal] = useState(false);
+  const [editUserData, setEditUserData] = useState({});
+  const [responsible, setResponsible] = useState([selectedUser.responsible]);
+
+  // FUNCTIONS--------
 
   //get all places
-  const getPlaces = async () => {
+  const getAllPlaces = async () => {
     const res = await Post({
       api: "/api/plant/all/department",
       notifytrue: false,
@@ -22,6 +28,7 @@ export const EditUserProvider = (props) => {
     setAllPlaces(res);
     setPlacesWithoutManager(value);
   };
+
   //get all users
   const getAllUsers = async () => {
     const res = await Post({
@@ -30,6 +37,7 @@ export const EditUserProvider = (props) => {
     });
     setAllUsers(res);
   };
+
   //reset password
   const resetPassword = async (item) => {
     await Patch({
@@ -42,7 +50,7 @@ export const EditUserProvider = (props) => {
       message: "New password sent",
     });
   };
-
+  //delete user
   const deleteUser = async (id) => {
     const res = await Post({
       api: "/api/user/delete",
@@ -50,22 +58,24 @@ export const EditUserProvider = (props) => {
     });
     setAllUsers(res);
   };
-
+  //create UserModal open close
   const openCloseCreateUserModal = () => {
     setCreateUSerModal(!createUserModal);
   };
+  //edit user modal open close
   const openCloseEditUserModal = () => {
     setEditUserModal(!editUserModal);
+    setResponsible([selectedUser.responsible]);
   };
 
   const updateUser = () => {};
 
   useEffect(() => {
     getAllUsers();
-    getPlaces();
-    console.log("user context rendering");
+    getAllPlaces();
   }, []);
-  console.log(allUsers);
+
+  // END
   return (
     <EditUserContext.Provider
       value={{
@@ -85,6 +95,9 @@ export const EditUserProvider = (props) => {
         allPlaces,
         placesWithoutManager,
         getAllUsers,
+        getAllPlaces,
+        responsible,
+        setResponsible,
       }}
     >
       {props.children}

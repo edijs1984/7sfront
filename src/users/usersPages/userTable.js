@@ -4,9 +4,12 @@ import Pagin from "../../comonComponents/pagination";
 import { EditUserContext } from "../../context/editUserContext";
 
 const UserTable = ({ currentPosts, paginate, posts, postsPerPage }) => {
-  const { setSelectedUser, resetPassword, deleteUser } = useContext(
-    EditUserContext
-  );
+  const {
+    setSelectedUser,
+    resetPassword,
+    deleteUser,
+    openCloseEditUserModal,
+  } = useContext(EditUserContext);
 
   return (
     <React.Fragment>
@@ -55,6 +58,7 @@ const UserTable = ({ currentPosts, paginate, posts, postsPerPage }) => {
                     variant="warning"
                     onClick={() => {
                       setSelectedUser(item);
+                      openCloseEditUserModal();
                     }}
                   >
                     Edit
