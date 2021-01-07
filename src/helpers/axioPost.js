@@ -46,7 +46,23 @@ export const Post = async ({ api, data, message, notifytrue }) => {
     if (notifytrue !== false) {
       notify(message);
     }
-    console.log(res.data);
+    return res.data;
+  } catch (e) {
+    badNotify(e.response.data);
+  }
+};
+export const Patch = async ({ api, data, message, notifytrue }) => {
+  try {
+    const res = await Axios.patch(
+      apiUrl + api,
+      {
+        data,
+      },
+      { headers: { "auth-token": token } }
+    );
+    if (notifytrue !== false) {
+      notify(message);
+    }
     return res.data;
   } catch (e) {
     badNotify(e.response.data);

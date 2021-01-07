@@ -1,45 +1,12 @@
 import React, { useState, useContext } from "react";
 import { Table, Button } from "react-bootstrap";
 import Pagin from "../../comonComponents/pagination";
-import EditUserModal from "./editUserModal";
-import { AuthContext } from "../../context/auth";
-import Axios from "axios";
-import { apiUrl } from "../../config.json";
-import { ToastContext } from "./../../context/toastContext";
-const UserTable = ({
-  currentPosts,
-  paginate,
-  posts,
-  postsPerPage,
-  deleteUser,
-  updateUser,
-}) => {
-  const [selected, setSelected] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
-  const { notify, badNotify } = useContext(ToastContext);
-  const token = localStorage.getItem("JwtToken");
-  const { user } = useContext(AuthContext);
+import { EditUserContext } from "../../context/editUserContext";
 
-  const resetPassword = async (item) => {
-    try {
-      await Axios.patch(
-        apiUrl + "/api/user/reset",
-        {
-          id: item,
-          comp: user.company,
-          password: Math.random().toString(36).replace("0.", ""),
-        },
-        { headers: { "auth-token": token } }
-      );
-
-      notify("Password reset is done");
-      updateUser();
-    } catch (e) {
-      badNotify(e);
-    }
-  };
-
-  const modalManage = () => setOpenModal(!openModal);
+const UserTable = ({ currentPosts, paginate, posts, postsPerPage }) => {
+  const { setSelectedUser, resetPassword, deleteUser } = useContext(
+    EditUserContext
+  );
 
   return (
     <React.Fragment>
@@ -76,7 +43,7 @@ const UserTable = ({
                     size="sm"
                     variant="info"
                     onClick={() => {
-                      resetPassword(item._id, item.name);
+                      resetPassword(item._id);
                     }}
                   >
                     Reset Password
@@ -87,8 +54,7 @@ const UserTable = ({
                     size="sm"
                     variant="warning"
                     onClick={() => {
-                      setSelected(item);
-                      modalManage();
+                      setSelectedUser(item);
                     }}
                   >
                     Edit
@@ -112,12 +78,12 @@ const UserTable = ({
         totalPosts={posts.length}
         paginate={paginate}
       />
-      <EditUserModal
+      {/* <EditUserModal
         selected={selected}
         openModal={openModal}
-        modalManage={modalManage}
+        modalManage={() => modalManage()}
         updateUser={() => updateUser()}
-      />
+      /> */}
     </React.Fragment>
   );
 };

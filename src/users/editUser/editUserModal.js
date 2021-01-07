@@ -1,69 +1,72 @@
-import React, { useState, useContext } from "react";
-import { Form, Button, Container, Modal } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Modal, Button, Form, Container } from "react-bootstrap";
+import { Post } from "../../helpers/axioPost";
 import BootstrapDropdown from "../../comonComponents/BootstarpDropdown";
-import BootstrapDropdownMultiple from "../../comonComponents/BootstarpDropdownMultiple";
-import { Post, Company } from "../../helpers/axioPost";
-import { EditUserContext } from "../../context/editUserContext";
-
-const CreateUserModal = () => {
-  const {
-    allPlaces,
-    placesWithoutManager,
-    createUserModal,
-    openCloseCreateUserModal,
-    getAllUsers,
-  } = useContext(EditUserContext);
-  const [manager, setManager] = useState(false);
+import BootstrapDropdownMultipleEditUSer from "./BootstrapDropdownMutipleEditUser";
+const EditUserModal = ({ openModal, modalManage, selected, updateUser }) => {
   const [admin, setAdmin] = useState(false);
+  const [manager, setManager] = useState(false);
   const [department, setDepartment] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [responsible, setResponsible] = useState([]);
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [places, setPlaces] = useState([]);
+  const [allPlaces, setAllPlaces] = useState([]);
 
-  const post = async (e) => {
-    e.preventDefault();
+  const res = async () => {
     const res = await Post({
-      api: "/api/user/create",
-      data: {
-        name: name,
-        email: email,
-        isAdmin: admin,
-        department: department,
-        maneger: manager,
-        responsible: responsible,
-        company: Company,
-      },
-      notifytrue: true,
-      message: "User created",
+      api: "/api/plant/all/department",
+      notifytrue: false,
     });
-    clearAll();
-    getAllUsers();
+    const value = res.filter(
+      (value) => !value.responsible || value.responsible === ""
+    );
+    setAllPlaces(res);
+    setPlaces(value);
   };
 
-  const clearAll = () => {
-    setManager(false);
-    setAdmin(false);
-    setName("");
-    setEmail("");
-    setResponsible("");
-    setDepartment("");
+  useEffect(() => {
+    setAdmin(selected.isAdmin === true ? true : false);
+    setManager(selected.maneger === true ? true : false);
+    res();
+  }, []);
+
+  const post = async (data) => {
+    await Post({
+      api: "/api/user/change",
+      data: {
+        id: selected._id,
+        name: data.name,
+        email: data.email,
+        isAdmin: admin === "" ? selected.isAdmin : admin,
+        manager: manager === "" ? selected.manager : manager,
+        department: department === "" ? selected.department : department,
+        responsible: responsible === "" ? selected.responsible : responsible,
+      },
+      message: "User Updated",
+    });
+    updateUser();
+    modalManage();
   };
 
+  useEffect(() => {
+    setAdmin(selected.isAdmin);
+    setManager(selected.manager);
+  }, []);
+
+  const set = ["a", "b", "c"];
   const EditResponsible = async (value) => {
     setResponsible(responsible.filter((resp) => resp !== value));
   };
   return (
     <div>
       <Modal
-        show={createUserModal}
-        onHide={() => openCloseCreateUserModal()}
+        show={openModal}
+        onHide={modalManage}
         aria-labelledby="example-modal-sizes-title-sm"
       >
-        <Modal.Header closeButton={() => openCloseCreateUserModal()}>
-          {/* <button onClick={() => openCloseUserCreateModal()}>testb</button> */}
-          <Modal.Title id="example-modal-sizes-title-sm">
-            Create User
-          </Modal.Title>
+        <Modal.Header closeButton={() => modalManage()}>
+          <Modal.Title id="example-modal-sizes-title-sm">Edit User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Container>
@@ -76,7 +79,7 @@ const CreateUserModal = () => {
                     type="email"
                     placeholder="Email"
                     onChange={(e) => setEmail(e.target.value)}
-                    value={email}
+                    value={selected.email}
                   />
                 </Form.Group>
 
@@ -86,15 +89,15 @@ const CreateUserModal = () => {
                   <Form.Control
                     placeholder="Name"
                     onChange={(e) => setName(e.target.value)}
-                    value={name}
+                    value={selected.name}
                   />
                 </Form.Group>
                 <Form.Group controlId="formHorizontalEmail">
-                  <Form.Label>Working Place:</Form.Label>
-
+                  <Form.Label>Working Place</Form.Label>
                   <BootstrapDropdown
                     value={allPlaces}
                     funk={(e) => setDepartment(e)}
+                    currentValue={selected.department}
                   />
                 </Form.Group>
 
@@ -104,7 +107,7 @@ const CreateUserModal = () => {
                     id="custom-switch"
                     label="Administrator"
                     onChange={() => setAdmin(!admin)}
-                    checked={admin}
+                    checked={selected.isAdmin}
                   />
                 </Form.Group>
                 <Form.Group controlId="formHorizontalCheck">
@@ -113,28 +116,32 @@ const CreateUserModal = () => {
                     id="custom"
                     label="Manager"
                     onChange={() => setManager(!manager)}
-                    checked={manager}
+                    checked={selected.maneger}
                   />
                 </Form.Group>
 
-                {!manager ? (
+                {!selected.maneger ? (
                   ""
                 ) : (
                   <div>
                     <Form.Group controlId="formHorizontalEmail">
-                      <Form.Label>Add Places </Form.Label>
-
+                      <Form.Label>Add Places responsible for: </Form.Label>
                       <BootstrapDropdown
                         funk={(e) => setResponsible([...responsible, e])}
-                        value={placesWithoutManager}
+                        value={
+                          places.length > 0
+                            ? places
+                            : ["All places have managers"]
+                        }
                       />
                     </Form.Group>
                     <Form.Group controlId="formHorizontalEmail">
                       <Form.Label>Places responsible for:</Form.Label>
 
-                      <BootstrapDropdownMultiple
-                        value={responsible}
+                      <BootstrapDropdownMultipleEditUSer
+                        value={places}
                         funk={(e) => EditResponsible(e)}
+                        currentValue={selected.responsible}
                       />
                       <Form.Label>
                         <h6 style={{ color: "blue" }}>
@@ -161,4 +168,4 @@ const CreateUserModal = () => {
   );
 };
 
-export default CreateUserModal;
+export default EditUserModal;

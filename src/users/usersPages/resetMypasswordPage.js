@@ -3,7 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { AuthContext } from "../../context/auth";
 import Axios from "axios";
 import { apiUrl } from "../../config.json";
-import { ToastContext } from "./../../context/toastContext";
+import { ToastContext } from "../../context/toastContext";
 import CustomInput from "../../comonComponents/customInput";
 
 const EditUser = () => {
@@ -23,7 +23,7 @@ const EditUser = () => {
           {
             id: user._id,
             comp: user.company,
-            password: password
+            password: password,
           },
           { headers: { "auth-token": token } }
         );
@@ -41,7 +41,7 @@ const EditUser = () => {
     <div style={{ marginLeft: "40%" }}>
       <div
         style={{
-          width: "60%"
+          width: "60%",
         }}
       >
         <div style={{ margin: "15%" }}>
@@ -51,14 +51,14 @@ const EditUser = () => {
           <h4>New Password</h4>
           <CustomInput
             currentValue={password}
-            handl={res => setPassword(res)}
+            handl={(res) => setPassword(res)}
             type="password"
           />
           <div style={{ marginTop: "5%" }}>
             <h4>Confirm New paasword</h4>
             <CustomInput
               currentValue={newPassword}
-              handl={res => setNewPassword(res)}
+              handl={(res) => setNewPassword(res)}
               type="password"
             />
           </div>
