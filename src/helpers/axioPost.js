@@ -38,8 +38,7 @@ export const Post = async ({ api, data, message, notifytrue }) => {
     const res = await Axios.post(
       apiUrl + api,
       {
-        company: Company,
-        data,
+        data: { ...data, company: Company },
       },
       { headers: { "auth-token": token } }
     );

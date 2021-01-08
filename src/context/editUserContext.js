@@ -1,6 +1,13 @@
 import React, { useState, createContext, useEffect } from "react";
 import { Post, Patch, Company } from "../helpers/axioPost";
+
+import {
+  userEditApi,
+  userDeleteApi,
+  userAllApi,
+} from "../httpHooks/httpUserEndpoints";
 export const EditUserContext = createContext();
+
 export const EditUserProvider = (props) => {
   //common state
   const [allUsers, setAllUsers] = useState([]);
@@ -13,6 +20,8 @@ export const EditUserProvider = (props) => {
   const [editUserModal, setEditUserModal] = useState(false);
   const [editUserData, setEditUserData] = useState({});
   const [responsible, setResponsible] = useState([selectedUser.responsible]);
+  //http
+  //get all users
 
   // FUNCTIONS--------
 
@@ -32,8 +41,7 @@ export const EditUserProvider = (props) => {
   //get all users
   const getAllUsers = async () => {
     const res = await Post({
-      api: "/api/user/all",
-      notifytrue: true,
+      api: userAllApi,
     });
     setAllUsers(res);
   };
@@ -53,7 +61,7 @@ export const EditUserProvider = (props) => {
   //delete user
   const deleteUser = async (id) => {
     const res = await Post({
-      api: "/api/user/delete",
+      api: userDeleteApi,
       data: id,
     });
     setAllUsers(res);
