@@ -1,24 +1,34 @@
 import React, { useState, useContext } from "react";
 import { Table, Button } from "react-bootstrap";
-import Pagin from "../../comonComponents/pagination";
-import { EditUserContext } from "../../context/editUserContext";
+import { UserContext } from "../userContext";
+import EditUserModal from "../editUser/editUserModal";
 
-const UserTable = ({ currentPosts, paginate, posts, postsPerPage }) => {
-  const {
-    setSelectedUser,
-    resetPassword,
-    deleteUser,
-    openCloseEditUserModal,
-  } = useContext(EditUserContext);
+const UserTable = () => {
+  const { dispatch, allUsers } = useContext(UserContext);
+  const [selectedUser, setSelectedUser] = useState({
+    name: "",
+    email: "",
+    workPlace: "",
+    manager: false,
+    isAdmin: false,
+  });
 
-  return (
+  return !allUsers ? (
+    <>...Loding</>
+  ) : (
     <React.Fragment>
-      <Table size="sm">
-        <thead>
-          <tr style={{ fontSize: 18, color: "#ff6600", textAlign: "center" }}>
+      <Table striped bordered hover size="sm">
+        <thead
+          style={{
+            backgroundColor: "#2f3c48",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          <tr>
             <td>User Name</td>
             <td>User Email</td>
-            <td>Department</td>
+            <td>Workplace</td>
             <td>Manager</td>
             <td>Responsible</td>
             <td>Admin</td>
@@ -28,16 +38,16 @@ const UserTable = ({ currentPosts, paginate, posts, postsPerPage }) => {
         </thead>
 
         <tbody>
-          {currentPosts.map((item) => {
+          {allUsers.map((item) => {
             return (
               <tr key={item._id} style={{ textAlign: "center" }}>
                 <td>{item.name} </td>
                 <td>{item.email}</td>
-                <td>{!item.department ? "NON" : item.department}</td>
-                <td>{item.maneger + ""}</td>
+                <td>{!item.workPlace ? "Non" : item.workPlace.placeName}</td>
+                <td>{item.manager + ""}</td>
                 <td>
-                  {item.responsible.map((obj, index) => {
-                    return obj + ", ";
+                  {item.responsibleForPlace.map((obj) => {
+                    return obj.placeName + ",";
                   })}
                 </td>
                 <td>{item.isAdmin + ""}</td>
@@ -45,9 +55,9 @@ const UserTable = ({ currentPosts, paginate, posts, postsPerPage }) => {
                   <Button
                     size="sm"
                     variant="info"
-                    onClick={() => {
-                      resetPassword(item._id);
-                    }}
+                    onClick={() =>
+                      dispatch({ type: "resetPassword", payload: item._id })
+                    }
                   >
                     Reset Password
                   </Button>
@@ -57,17 +67,31 @@ const UserTable = ({ currentPosts, paginate, posts, postsPerPage }) => {
                     size="sm"
                     variant="warning"
                     onClick={() => {
-                      setSelectedUser(item);
-                      openCloseEditUserModal();
+                      setSelectedUser({
+                        id: item._id,
+                        name: item.name,
+                        email: item.email,
+                        workPlace: item.workPlace._id,
+                        manager: item.manager,
+                        isAdmin: item.isAdmin,
+                        placeName: item.workPlace.placeName,
+                      });
+                      dispatch({ type: "editUserModal" });
                     }}
                   >
                     Edit
                   </Button>
 
                   <Button
+                    style={{ marginLeft: "1%" }}
                     size="sm"
                     variant="danger"
-                    onClick={() => deleteUser(item._id)}
+                    onClick={() =>
+                      dispatch({
+                        type: "deleteUser",
+                        payload: { id: item._id },
+                      })
+                    }
                   >
                     Delete
                   </Button>
@@ -77,17 +101,7 @@ const UserTable = ({ currentPosts, paginate, posts, postsPerPage }) => {
           })}
         </tbody>
       </Table>
-      <Pagin
-        postsPerPage={postsPerPage}
-        totalPosts={posts.length}
-        paginate={paginate}
-      />
-      {/* <EditUserModal
-        selected={selected}
-        openModal={openModal}
-        modalManage={() => modalManage()}
-        updateUser={() => updateUser()}
-      /> */}
+      <EditUserModal selectedUser={selectedUser} />
     </React.Fragment>
   );
 };

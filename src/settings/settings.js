@@ -1,6 +1,6 @@
 import React from "react";
-import { Icon, Grid } from "semantic-ui-react";
-import { Button } from "react-bootstrap";
+
+import { Button, Row, Card } from "react-bootstrap";
 
 import "./settings.css";
 import { Link } from "react-router-dom";
@@ -8,8 +8,8 @@ const Settings = () => {
   return (
     <React.Fragment>
       <div className="settingsGrid">
-        <Grid columns="3" divided>
-          <Grid.Row>
+        <Row>
+          <Row>
             <div>
               <Button
                 variant={"primary"}
@@ -17,7 +17,7 @@ const Settings = () => {
                 as={Link}
                 to="/company"
               >
-                <Icon name="building" size="massive" color="white" />
+                <Card size="massive" color="orange" />
 
                 <h2>Company Management</h2>
               </Button>
@@ -28,7 +28,7 @@ const Settings = () => {
                 as={Link}
                 to="/user/create"
               >
-                <Icon name="user" size="massive" color="white" />
+                <Card size="massive" color="orange" />
                 <h2>User Management</h2>
               </Button>
             </div>
@@ -38,12 +38,12 @@ const Settings = () => {
                 as={Link}
                 to="/auditrulles"
               >
-                <Icon name="clipboard" size="massive" color="white" />
+                <Card size="massive" color="orange" />
                 <h2>Audit Management</h2>
               </Button>
             </div>
-          </Grid.Row>
-        </Grid>
+          </Row>
+        </Row>
       </div>
     </React.Fragment>
   );
