@@ -1,20 +1,32 @@
-import React, { useContext } from "react";
-import { Form } from "react-bootstrap";
+import React from "react";
+import Select from "react-select";
 
-const PriorityDropdown = ({ funk }) => {
+const PriorityDropdown = ({ placeholder, valueSelected, onChange }) => {
+  var options = [
+    { value: "Low", label: "Low" },
+    { value: "High", label: "High" },
+    { value: "Very High", label: "Very High" },
+  ];
+
   return (
-    <Form.Control
-      size="sm"
-      as="select"
-      onClick={(e) => {
-        funk(e.target.value);
-      }}
-    >
-      <option>{"select Priority"}</option>
-      <option value={"Low"}>Low</option>
-      <option value={"High"}>High</option>
-      <option value={"High"}>Very High</option>
-    </Form.Control>
+    <Select
+      options={options}
+      onChange={(value) => onChange(value)}
+      placeholder={placeholder}
+      value={valueSelected}
+      theme={(theme) => ({
+        ...theme,
+        borderRadius: 4,
+        borderThickness: 1,
+
+        colors: {
+          ...theme.colors,
+          boxShadow: "#aaaaaa",
+          primary: "#aaaaaa",
+          primary25: "neutral5",
+        },
+      })}
+    />
   );
 };
 

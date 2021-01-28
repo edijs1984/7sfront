@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import CreateUserModal from "../createUser/createUserModal";
 import UserTable from "./userTable";
 import { Button } from "react-bootstrap";
@@ -6,8 +6,10 @@ import { UserContext } from "../userContext";
 import SettingsMenuBar from "../../comonComponents/settingMenuBar";
 
 const MainUserPage = () => {
-  const { dispatch } = useContext(UserContext);
-
+  const { userFunctions } = useContext(UserContext);
+  useEffect(() => {
+    userFunctions({ type: "getAllUsers" });
+  }, []);
   return (
     <div>
       <SettingsMenuBar />
@@ -15,7 +17,7 @@ const MainUserPage = () => {
         Users
       </h1>
       <Button
-        onClick={() => dispatch({ type: "createUserModal" })}
+        onClick={() => userFunctions({ type: "createUserModal" })}
         style={{ marginBottom: "1%", marginLeft: "1%" }}
         size="sm"
       >

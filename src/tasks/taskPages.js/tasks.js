@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from "react";
 import CreateTask from "../createTask/CreateTask";
-import { TaskContext } from "../taskContext";
 import TaskTable from "./taskTable";
+import EditTask from "../editTask/EditTask";
+import { TaskContext } from "../taskContext";
 
 const Tasks = () => {
   const { taskFunctions } = useContext(TaskContext);
@@ -18,6 +19,7 @@ const Tasks = () => {
 
       <TaskTable />
       <CreateTask />
+      <EditTask />
     </div>
   );
 };

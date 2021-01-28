@@ -7,7 +7,9 @@ export const TaskContext = createContext();
 export const TaskProvider = (props) => {
   const [tasks, setTasks] = useState([]);
   const [createModal, setCreateModal] = useState(false);
+  const [editTaskModal, setEditTaskModal] = useState(false);
   const [observationtype, setobservationtype] = useState([]);
+  const [selectedTask, setSelectedTask] = useState("");
 
   const getTasks = async () => {
     const res = await Post({
@@ -30,19 +32,56 @@ export const TaskProvider = (props) => {
     getTasks();
   };
 
+  const editTask = async () => {
+    const res = await Post({
+      api: Api.editTaskApi,
+      data: {
+        id: selectedTask.id,
+        issue: selectedTask.issue,
+        comment: selectedTask.comment,
+        placeId: selectedTask.place.value,
+        responsibleId: selectedTask.responsible.value,
+        observationId: selectedTask.observationtype.value,
+        priority: selectedTask.priority.value,
+        status: selectedTask.status.value,
+        deadline: selectedTask.deadline,
+        creator: selectedTask.creator,
+      },
+    });
+    if (!res.error) {
+      setTasks(res);
+    }
+  };
+
   const taskFunctions = async (data) => {
     switch (data.type) {
+      //queries
       case "getTasks":
         getTasks();
         break;
+      case "getObservationTypes":
+        getObservations();
+        break;
+      //create
       case "createModal":
         setCreateModal(!createModal);
         break;
-      case "getObservations":
-        getObservations();
-        break;
       case "createTask":
         createTask(data.payload);
+        break;
+      // edit task
+      case "editTaskModal":
+        setEditTaskModal(!editTaskModal);
+        setSelectedTask(data.payload);
+        break;
+      case "editSelectedTask":
+        setSelectedTask(data.payload);
+        break;
+      case "editTask":
+        editTask();
+        break;
+      case "closeEditTaskModal":
+        setEditTaskModal(!editTaskModal);
         break;
       default:
         console.log(data.type);
@@ -51,7 +90,14 @@ export const TaskProvider = (props) => {
 
   return (
     <TaskContext.Provider
-      value={{ taskFunctions, tasks, createModal, observationtype }}
+      value={{
+        taskFunctions,
+        tasks,
+        createModal,
+        observationtype,
+        selectedTask,
+        editTaskModal,
+      }}
     >
       {props.children}
     </TaskContext.Provider>

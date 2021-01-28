@@ -23,13 +23,12 @@ import AdminRoutes from "./users/userRouteComponents/adminRoutes";
 import AuthRoute from "./users/userRouteComponents/authRoutes";
 import AuditRulles from "./audit/auditRulles/auditRulles";
 import Audit from "./audit/auditPages/audit";
-import QuickTask from "./tasks/quicktasks/quicktask";
 import Settings from "./settings/settings";
 import SingleAuditResult from "./audit/auditPages/singleAuditResult";
 import Myprofile from "./users/usersPages/MyProfile";
-import Place from "./company/place.js";
 import Tasks from "./tasks/taskPages.js/tasks";
-import MainCompanyPage from "./company/CompanyMain.js";
+import Company from "./company/Company";
+
 // app
 const App = () => {
   return (
@@ -72,7 +71,7 @@ const App = () => {
                         exact
                         component={Settings}
                       />
-                      <AdminRoutes path="/company" exact component={Place} />
+                      <AdminRoutes path="/company" exact component={Company} />
                       <AdminRoutes
                         path="/auditrulles"
                         ecact

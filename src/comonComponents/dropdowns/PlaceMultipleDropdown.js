@@ -1,24 +1,28 @@
 import React, { useContext, useEffect } from "react";
 import Select from "react-select";
-import { UserContext } from "../../users/userContext";
+import { CompanyContext } from "../../company/companyContetx";
 
-const UserDropdown = ({ placeholder, valueSelected, onChange, clear }) => {
-  const { allUsers, userFunctions } = useContext(UserContext);
-  const plch = <h6>Select user</h6>;
+const PlaceMultipleDropdown = ({ placeholder, valueSelected, onChange }) => {
+  const { places, placeFunctions } = useContext(CompanyContext);
+
   var options = [];
-  //get users
-  useEffect(() => {
-    userFunctions({ type: "getAllUsers" });
-  }, []);
-  //map users to state
-  allUsers.forEach((i) => {
-    options.push({ value: i._id, label: i.name });
-  });
-  //default value if has
 
+  useEffect(() => {
+    placeFunctions({ type: "getAllPlaces" });
+  }, []);
+
+  if (places)
+    places
+      .filter((i) => !i.responsible)
+      .forEach((i) => {
+        options.push({ value: i._id, label: i.placeName });
+      });
+
+  //default value if has
   return (
     <Select
-      isClearable={clear}
+      isClearable
+      isMulti
       options={options}
       onChange={(value) => onChange(value)}
       placeholder={placeholder}
@@ -39,4 +43,4 @@ const UserDropdown = ({ placeholder, valueSelected, onChange, clear }) => {
   );
 };
 
-export default UserDropdown;
+export default PlaceMultipleDropdown;

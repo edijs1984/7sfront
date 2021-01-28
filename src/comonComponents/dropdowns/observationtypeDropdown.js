@@ -1,27 +1,47 @@
 import React, { useContext, useEffect } from "react";
-import { Form } from "react-bootstrap";
+import Select from "react-select";
 import { TaskContext } from "../../tasks/taskContext";
 
-const ObservationDropdown = ({ funk, dunk }) => {
-  const { taskFunctions, observationtype } = useContext(TaskContext);
+const ObservationTypeDropdown = ({
+  placeholder,
+  valueSelected,
+  onChange,
+  clear,
+}) => {
+  const { observationtype, taskFunctions } = useContext(TaskContext);
+
+  var options = [];
+  //get users
   useEffect(() => {
-    taskFunctions({ type: "getObservations" });
+    taskFunctions({ type: "getObservationTypes" });
   }, []);
+  //map users to state
+  observationtype.forEach((i) => {
+    options.push({ value: i._id, label: i.observationName });
+  });
+  //default value if has
 
   return (
-    <Form.Control size="sm" as="select" onClick={(e) => funk(e.target.value)}>
-      <option>{"select Observation Type"}</option>
-      {!observationtype || observationtype.length > 0
-        ? observationtype.map((item) => {
-            return (
-              <option key={item._id} value={item._id} txt={item}>
-                {item.observationName}
-              </option>
-            );
-          })
-        : ""}
-    </Form.Control>
+    <Select
+      isClearable={clear}
+      options={options}
+      onChange={(value) => onChange(value)}
+      placeholder={placeholder}
+      value={valueSelected}
+      theme={(theme) => ({
+        ...theme,
+        borderRadius: 4,
+        borderThickness: 1,
+
+        colors: {
+          ...theme.colors,
+          boxShadow: "#aaaaaa",
+          primary: "#aaaaaa",
+          primary25: "neutral5",
+        },
+      })}
+    />
   );
 };
 
-export default ObservationDropdown;
+export default ObservationTypeDropdown;

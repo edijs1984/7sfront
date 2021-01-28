@@ -1,33 +1,37 @@
 import React, { createContext, useState, useEffect, useReducer } from "react";
 import { Post, User } from "../helpers/axioPost";
-
 import * as Api from "../apiLinks/httpUsers";
+
+//
 export const UserContext = createContext();
 export const UserProvider = (props) => {
   //user state
   const [allUsers, setAllUsers] = useState([]);
-  const [modal, setModal] = useState({ createModal: false, editModal: false });
+  const [createModal, setCreateModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [selected, setSelected] = useState({});
+
+  console.log(selected);
 
   //functions
   const deleteUser = async (data) => {
-    await Post({
+    const res = await Post({
       api: Api.userDeleteApi,
       data: { id: data },
-      message: "User Deleted",
-      notifytrue: true,
     });
-    getAllUsers();
+    if (!res.error) {
+      setAllUsers(res);
+    }
   };
+
   const getAllUsers = async () => {
     const res = await Post({
       api: Api.userAllApi,
     });
-    setAllUsers(res);
+    if (!res.error) {
+      setAllUsers(res);
+    }
   };
-
-  useEffect(() => {
-    getAllUsers();
-  }, []);
 
   const changePassword = async (data) => {
     await Post({
@@ -47,26 +51,28 @@ export const UserProvider = (props) => {
     });
   };
 
-  const editUser = async (data) => {
-    await Post({
+  const editUser = async () => {
+    const res = await Post({
       api: Api.userEditApi,
       data: {
-        id: data.id,
-        workPlace: data.workPlace,
-        name: data.name,
-        email: data.email,
-        isAdmin: data.isAdmin,
-        manager: data.manager,
+        id: selected.id,
+        workPlace: selected.place.value,
+        name: selected.name,
+        email: selected.email,
+        isAdmin: selected.isAdmin,
+        manager: selected.manager,
       },
-      message: "User edited",
-      notifytrue: true,
     });
-    getAllUsers();
-    setModal({ ...modal, editModal: false });
+    if (!res.error) {
+      setAllUsers(res);
+      setSelected({});
+      setEditModal(!editModal);
+    }
   };
 
   const createUser = async (data) => {
-    await Post({
+    console.log(data);
+    const res = await Post({
       api: Api.userCreateApi,
       data: {
         name: data.name,
@@ -76,38 +82,52 @@ export const UserProvider = (props) => {
         manager: data.manager,
         responsibleForPlace: data.responsibleForPlace,
       },
-      message: "User Created",
-      notifytrue: true,
     });
-    getAllUsers();
+    if (!res.error) {
+      setAllUsers(res);
+    }
   };
 
-  //reducer function
-  const dispatch = async (data) => {
+  //export function
+  const userFunctions = async (data) => {
     switch (data.type) {
+      // query
       case "getAllUsers":
         getAllUsers();
         break;
+
+      // create
       case "createUserModal":
-        setModal({ ...modal, createModal: !modal.createModal });
+        setCreateModal(!createModal);
         break;
+      case "createUser":
+        createUser(data.payload);
+        break;
+
+      // edit user
       case "editUserModal":
-        setModal({ ...modal, editModal: !modal.editModal });
+        setEditModal(!editModal);
+        setSelected(data.payload);
+        break;
+      case "editSelected":
+        setSelected(data.payload);
+        break;
+      case "editUser":
+        editUser();
+        break;
+      case "closeEditModal":
+        setEditModal(!editModal);
         break;
       case "deleteUser":
         deleteUser(data.payload.id);
         break;
-      case "editUser":
-        editUser(data.payload);
-        break;
+      //
+
       case "resetPassword":
         resetPassword(data.payload);
         break;
       case "changePassword":
         changePassword(data.payload);
-        break;
-      case "createUser":
-        createUser(data.payload);
         break;
       default:
         console.log(data.type);
@@ -121,8 +141,10 @@ export const UserProvider = (props) => {
       value={{
         allUsers,
         User,
-        dispatch,
-        modal,
+        userFunctions,
+        createModal,
+        editModal,
+        selected,
       }}
     >
       {props.children}

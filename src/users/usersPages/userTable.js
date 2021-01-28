@@ -1,10 +1,14 @@
-import React, { useState, useContext } from "react";
-import { Table, Button } from "react-bootstrap";
+import React, { useState, useContext, useEffect } from "react";
+import { Row, Table } from "react-bootstrap";
 import { UserContext } from "../userContext";
 import EditUserModal from "../editUser/editUserModal";
+import DeleteBtn from "../../comonComponents/buttons/deleteButton";
+import EditBtn from "../../comonComponents/buttons/editButton";
+import ResetBtn from "../../comonComponents/buttons/resetButton";
 
 const UserTable = () => {
-  const { dispatch, allUsers } = useContext(UserContext);
+  const { userFunctions, allUsers } = useContext(UserContext);
+
   const [selectedUser, setSelectedUser] = useState({
     name: "",
     email: "",
@@ -12,7 +16,6 @@ const UserTable = () => {
     manager: false,
     isAdmin: false,
   });
-
   return !allUsers ? (
     <>...Loding</>
   ) : (
@@ -26,14 +29,15 @@ const UserTable = () => {
           }}
         >
           <tr>
+            <td>Reset password</td>
             <td>User Name</td>
             <td>User Email</td>
             <td>Workplace</td>
             <td>Manager</td>
             <td>Responsible</td>
             <td>Admin</td>
-            <td>Reset</td>
             <td>Edit</td>
+            <td>Delete</td>
           </tr>
         </thead>
 
@@ -41,6 +45,16 @@ const UserTable = () => {
           {allUsers.map((item) => {
             return (
               <tr key={item._id} style={{ textAlign: "center" }}>
+                <td style={{ width: "8%" }}>
+                  <ResetBtn
+                    onClick={() =>
+                      userFunctions({
+                        type: "resetPassword",
+                        payload: item._id,
+                      })
+                    }
+                  />
+                </td>
                 <td>{item.name} </td>
                 <td>{item.email}</td>
                 <td>{!item.workPlace ? "Non" : item.workPlace.placeName}</td>
@@ -51,50 +65,35 @@ const UserTable = () => {
                   })}
                 </td>
                 <td>{item.isAdmin + ""}</td>
-                <td>
-                  <Button
-                    size="sm"
-                    variant="info"
-                    onClick={() =>
-                      dispatch({ type: "resetPassword", payload: item._id })
-                    }
-                  >
-                    Reset Password
-                  </Button>
-                </td>
-                <td>
-                  <Button
-                    size="sm"
-                    variant="warning"
+                <td style={{ width: "4%" }}>
+                  <EditBtn
                     onClick={() => {
-                      setSelectedUser({
-                        id: item._id,
-                        name: item.name,
-                        email: item.email,
-                        workPlace: item.workPlace._id,
-                        manager: item.manager,
-                        isAdmin: item.isAdmin,
-                        placeName: item.workPlace.placeName,
+                      userFunctions({
+                        type: "editUserModal",
+                        payload: {
+                          id: item._id,
+                          name: item.name,
+                          email: item.email,
+                          manager: item.manager,
+                          isAdmin: item.isAdmin,
+                          place: {
+                            value: item.workPlace._id,
+                            label: item.workPlace.placeName,
+                          },
+                        },
                       });
-                      dispatch({ type: "editUserModal" });
                     }}
-                  >
-                    Edit
-                  </Button>
-
-                  <Button
-                    style={{ marginLeft: "1%" }}
-                    size="sm"
-                    variant="danger"
+                  />
+                </td>
+                <td style={{ width: "4%" }}>
+                  <DeleteBtn
                     onClick={() =>
-                      dispatch({
+                      userFunctions({
                         type: "deleteUser",
                         payload: { id: item._id },
                       })
                     }
-                  >
-                    Delete
-                  </Button>
+                  />
                 </td>
               </tr>
             );

@@ -1,28 +1,49 @@
-import React, { useContext } from "react";
-import { Form } from "react-bootstrap";
+import React, { useContext, useEffect } from "react";
+import Select from "react-select";
 import { CompanyContext } from "../../company/companyContetx";
 
-const PlaceDropdown = ({ funk }) => {
-  const { places } = useContext(CompanyContext);
+const PlaceDropdown = ({
+  placeholder,
+  valueSelected,
+  onChange,
+  multi,
+  clear,
+}) => {
+  const { places, placeFunctions } = useContext(CompanyContext);
+
+  var options = [];
+
+  useEffect(() => {
+    placeFunctions({ type: "getAllPlaces" });
+  }, []);
+
+  if (places)
+    places.forEach((i) => {
+      options.push({ value: i._id, label: i.placeName });
+    });
+
+  //default value if has
   return (
-    <Form.Control
-      size="sm"
-      as="select"
-      onClick={(e) => {
-        funk(e.target.value);
-      }}
-    >
-      <option>{"select Place"}</option>
-      {!places || places.length > 0
-        ? places.map((item) => {
-            return (
-              <option key={item._id} value={item._id}>
-                {item.placeName}
-              </option>
-            );
-          })
-        : ""}
-    </Form.Control>
+    <Select
+      isClearabl={clear}
+      isMulti={multi}
+      options={options}
+      onChange={(value) => onChange(value)}
+      placeholder={placeholder}
+      value={valueSelected}
+      theme={(theme) => ({
+        ...theme,
+        borderRadius: 4,
+        borderThickness: 1,
+
+        colors: {
+          ...theme.colors,
+          boxShadow: "#aaaaaa",
+          primary: "#aaaaaa",
+          primary25: "neutral5",
+        },
+      })}
+    />
   );
 };
 

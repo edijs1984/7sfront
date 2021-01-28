@@ -1,5 +1,3 @@
-import { useContext } from "react";
-
 import Axios from "axios";
 import { apiUrl } from "../config.json";
 import { toast } from "react-toastify";
@@ -46,13 +44,18 @@ export const Post = async ({ api, data, message, notifytrue }) => {
       },
       { headers: { "auth-token": token } }
     );
+
     if (!res.data.data) {
+      if (res.data.message) {
+        notify(res.data.message);
+      }
       return res.data;
     } else {
       notify(res.data.message);
       return res.data.data;
     }
-  } catch (err) {
-    badNotify(err.response.data);
+  } catch (error) {
+    badNotify(error.response.data);
+    return { error: error };
   }
 };

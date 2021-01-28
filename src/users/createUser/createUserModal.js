@@ -1,70 +1,44 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { Form, Button, Container, Modal, Row } from "react-bootstrap";
-import BootstrapDropdown from "../../comonComponents/dropdowns/BootstarpDropdown";
-import ResponsibleList from "./responsibleList";
+import CustomInput from "../../comonComponents/CustomInput";
 import { UserContext } from "../userContext";
-import { Post } from "../../helpers/axioPost";
-import * as ApiPlaces from "../../apiLinks/httpPlaces";
-const CreateUserModal = () => {
-  const { modal, dispatch } = useContext(UserContext);
-  const [places, setPlaces] = useState([]);
-  const [placesWithoutMan, setPlacesWithoutMAn] = useState([]);
+import PlaceDropdown from "../../comonComponents/dropdowns/placeDropdown";
+import PlaceMultipleDropdown from "../../comonComponents/dropdowns/PlaceMultipleDropdown";
 
+const CreateUserModal = () => {
+  const { createModal, userFunctions } = useContext(UserContext);
+
+  const [responsible, setResponsible] = useState([]);
+  const [place, setPlace] = useState("");
   const [user, setUser] = useState({
     isAdmin: false,
     manager: false,
     responsibleForPlace: [],
   });
-
+  console.log(responsible);
   const create = async (e) => {
     e.preventDefault();
-    await dispatch({ type: "createUser", payload: user });
-    clearAll();
-    getPlaceWitoutManager();
-    console.log("call once");
-  };
-
-  useEffect(() => {
-    getAllPlaces();
-    getPlaceWitoutManager();
-    console.log("now");
-  }, []);
-
-  const getAllPlaces = async () => {
-    const res = await Post({ api: ApiPlaces.placesAllApi });
-    setPlaces(res);
-  };
-
-  const getPlaceWitoutManager = async () => {
-    const res = await Post({ api: ApiPlaces.placesWithoutMan });
-    setPlacesWithoutMAn(res);
-  };
-
-  const clearAll = () => {
-    setUser({
-      isAdmin: false,
-      manager: false,
-      name: "",
-      email: "",
-      workPlace: "",
-      responsibleForPlace: [],
+    responsible.forEach((i) => user.responsibleForPlace.push(i.value));
+    await userFunctions({
+      type: "createUser",
+      payload: { ...user, workPlace: place.value },
     });
+    setUser({ isAdmin: false, manager: false, responsibleForPlace: [] });
+    setPlace("");
   };
 
   return (
     <div>
       <Modal
-        show={modal.createModal}
+        show={createModal}
         onHide={() => {
-          dispatch({ type: "createUserModal" });
-          clearAll();
+          userFunctions({ type: "createUserModal" });
         }}
         aria-labelledby="example-modal-sizes-title-sm"
       >
         <Modal.Header
           closeButton={() => {
-            dispatch({ type: "createUserModal" });
-            clearAll();
+            userFunctions({ type: "createUserModal" });
           }}
         >
           <Modal.Title id="example-modal-sizes-title-sm">
@@ -77,37 +51,39 @@ const CreateUserModal = () => {
               <Form onSubmit={create}>
                 <Form.Group controlId="formHorizontalEmail">
                   <Form.Label>Email</Form.Label>
-
-                  <Form.Control
+                  <CustomInput
+                    required={true}
                     type="email"
-                    placeholder="Email"
-                    onChange={(e) =>
-                      setUser({ ...user, email: e.target.value })
-                    }
-                    value={user.email}
+                    placeholder={"Email"}
+                    onChange={(e) => setUser({ ...user, email: e })}
+                    value={user.email || ""}
                   />
                 </Form.Group>
-
+                {/* // */}
                 <Form.Group controlId="formHorizontalName">
                   <Form.Label>Name</Form.Label>
-
-                  <Form.Control
-                    placeholder="Name"
-                    onChange={(e) => setUser({ ...user, name: e.target.value })}
-                    value={user.name}
+                  <CustomInput
+                    required={true}
+                    placeholder={"Name"}
+                    onChange={(e) => setUser({ ...user, name: e })}
+                    value={user.name || ""}
                   />
                 </Form.Group>
+                {/* // */}
                 <Form.Group controlId="formHorizontalEmail">
                   <Form.Label>Working Place:</Form.Label>
-                  {/* bts dropdown  */}
-                  <BootstrapDropdown
-                    value={places}
-                    funk={(e) => setUser({ ...user, workPlace: e })}
+                  <PlaceDropdown
+                    placeholder={"Select work place"}
+                    valueSelected={place}
+                    onChange={(e) => {
+                      setPlace(e);
+                    }}
                   />
                 </Form.Group>
-
+                {/* // */}
                 <Form.Group controlId="formHorizontalCheck">
                   <Form.Check
+                    defaultValue={false}
                     type="switch"
                     id="custom-switch"
                     label="Administrator"
@@ -117,8 +93,10 @@ const CreateUserModal = () => {
                     checked={user.isAdmin}
                   />
                 </Form.Group>
+                {/* // */}
                 <Form.Group controlId="formHorizontalCheck">
                   <Form.Check
+                    defaultValue={false}
                     type="switch"
                     id="custom"
                     label="Manager"
@@ -128,27 +106,19 @@ const CreateUserModal = () => {
                     checked={user.manager}
                   />
                 </Form.Group>
-
+                {/* // */}
                 {user.manager === true ? (
-                  <div>
-                    <ResponsibleList
-                      placesWithoutMan={placesWithoutMan}
-                      user={user}
-                      setUser={setUser}
+                  <div style={{ marginBottom: "20%" }}>
+                    <PlaceMultipleDropdown
+                      onChange={(e) => setResponsible(e)}
+                      valueSelected={responsible}
                     />
                   </div>
                 ) : (
                   ""
                 )}
                 <Form.Group>
-                  <Button
-                    disabled={
-                      user.name === "" ||
-                      user.email === "" ||
-                      user.workPlace === ""
-                    }
-                    type="submit"
-                  >
+                  <Button disabled={!place} type="submit">
                     Create
                   </Button>
                 </Form.Group>

@@ -1,57 +1,25 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Modal, Button, Form, Container } from "react-bootstrap";
-import BootstrapDropdown from "../../comonComponents/dropdowns/BootstarpDropdown";
 import { UserContext } from "../userContext";
-import { CompanyContext } from "../../company/companyContetx";
+import CustomInput from "../../comonComponents/CustomInput";
+import PlaceDropdown from "../../comonComponents/dropdowns/placeDropdown";
 
-const EditUserModal = ({ selectedUser }) => {
-  const { dispatch, modal } = useContext(UserContext);
-  const { places, contextFunctions } = useContext(CompanyContext);
-  const [updatedUser, setUpdatedUser] = useState({
-    name: "",
-    email: "",
-    workPlace: "",
-    manager: null,
-    isAdmin: null,
-  });
+const EditUserModal = () => {
+  const { userFunctions, editModal, selected } = useContext(UserContext);
 
-  useEffect(() => {
-    contextFunctions({ type: "getAllPlaces" });
-  }, []);
-  console.log(updatedUser);
-  const update = () => {
-    setUpdatedUser({
-      ...updatedUser,
-      manager: selectedUser.manager,
-      isAdmin: selectedUser.isAdmin,
-      workPlace: selectedUser.workPlace,
-      name: selectedUser.name,
-      email: selectedUser.email,
-    });
-  };
   const Submit = (e) => {
     e.preventDefault();
-    dispatch({
+    userFunctions({
       type: "editUser",
-      payload: {
-        name: updatedUser.name,
-        email: updatedUser.email,
-        workPlace: updatedUser.workPlace,
-        manager: updatedUser.manager,
-        isAdmin: updatedUser.isAdmin,
-        id: selectedUser.id,
-      },
     });
   };
-
-  return selectedUser === null ? (
+  return selected === null ? (
     ""
   ) : (
     <div>
       <Modal
-        onShow={() => update()}
-        show={modal.editModal}
-        onHide={() => dispatch({ type: "editUserModal" })}
+        show={editModal}
+        onHide={() => userFunctions({ type: "closeEditModal" })}
         aria-labelledby="example-modal-sizes-title-sm"
       >
         <Modal.Header closeButton>
@@ -63,39 +31,42 @@ const EditUserModal = ({ selectedUser }) => {
               <Form onSubmit={Submit}>
                 <Form.Group controlId="formHorizontalEmail">
                   <Form.Label>Email</Form.Label>
-
-                  <Form.Control
+                  <CustomInput
                     type="email"
                     placeholder="Email"
                     onChange={(e) =>
-                      setUpdatedUser({ ...updatedUser, email: e.target.value })
+                      userFunctions({
+                        type: "editSelected",
+                        payload: { ...selected, email: e },
+                      })
                     }
-                    value={updatedUser.email}
+                    value={selected.email}
                   />
                 </Form.Group>
 
                 <Form.Group controlId="formHorizontalName">
                   <Form.Label>Name</Form.Label>
-
-                  <Form.Control
+                  <CustomInput
                     placeholder="Name"
                     onChange={(e) =>
-                      setUpdatedUser({ ...updatedUser, name: e.target.value })
+                      userFunctions({
+                        type: "editSelected",
+                        payload: { ...selected, name: e },
+                      })
                     }
-                    value={updatedUser.name}
+                    value={selected.name}
                   />
                 </Form.Group>
                 <Form.Group controlId="formHorizontalEmail">
                   <Form.Label>Working Place</Form.Label>
-                  <BootstrapDropdown
-                    value={places}
-                    funk={(e) =>
-                      setUpdatedUser({
-                        ...updatedUser,
-                        workPlace: e,
+                  <PlaceDropdown
+                    valueSelected={selected.place}
+                    onChange={(e) =>
+                      userFunctions({
+                        type: "editSelected",
+                        payload: { ...selected, place: e },
                       })
                     }
-                    cv={selectedUser.placeName}
                   />
                 </Form.Group>
 
@@ -105,12 +76,12 @@ const EditUserModal = ({ selectedUser }) => {
                     id="custom-switch"
                     label="Administrator"
                     onChange={() =>
-                      setUpdatedUser({
-                        ...updatedUser,
-                        isAdmin: !updatedUser.isAdmin,
+                      userFunctions({
+                        type: "editSelected",
+                        payload: { ...selected, isAdmin: !selected.isAdmin },
                       })
                     }
-                    checked={updatedUser.isAdmin}
+                    checked={selected.isAdmin}
                   />
                 </Form.Group>
                 <Form.Group controlId="formHorizontalCheck">
@@ -119,12 +90,12 @@ const EditUserModal = ({ selectedUser }) => {
                     id="custom"
                     label="Manager"
                     onChange={() =>
-                      setUpdatedUser({
-                        ...updatedUser,
-                        manager: !updatedUser.manager,
+                      userFunctions({
+                        type: "editSelected",
+                        payload: { ...selected, manager: !selected.manager },
                       })
                     }
-                    checked={updatedUser.manager}
+                    checked={selected.manager}
                   />
                 </Form.Group>
 

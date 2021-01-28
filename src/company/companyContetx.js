@@ -1,80 +1,115 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import React, { createContext, useState } from "react";
 import { Post } from "../helpers/axioPost";
-import { UserContext } from "../users/userContext";
 import * as Api from "../apiLinks/httpPlaces";
 
 export const CompanyContext = createContext();
-
 export const CompanyProvider = (props) => {
-  const { allUsers } = useContext(UserContext);
+  //
+  const [activePage, setActivePage] = useState(1);
   const [modal, setModal] = useState(false);
+  //
   const [places, setPlaces] = useState("");
+  const [withoutManager, setWithoutManager] = useState([]);
+  //
+  const [selected, setSelected] = useState({});
 
+  //functions
   const getAllPlaces = async () => {
     const result = await Post({ api: Api.placesAllApi });
     setPlaces(result);
   };
 
-  useEffect(() => {
-    getAllPlaces();
-  }, []);
+  const getWithoutManager = async () => {
+    const result = await Post({ api: Api.placesWithoutMan });
+    setWithoutManager(result);
+  };
 
   const removePlace = async (data) => {
     const res = await Post({
       api: Api.placesDeletApi,
       data: data,
     });
-    setPlaces(res);
+    if (!res.error) {
+      setPlaces(res);
+    }
   };
 
   const createPlace = async (data) => {
     const res = await Post({
       api: Api.placesCreateApi,
-      data: {
-        placeName: data.placeName,
-        responsible: data.userId,
-      },
+      data: data,
     });
-    setPlaces(res);
+    if (!res.error) {
+      setPlaces(res);
+    }
   };
 
-  const editPlace = async (data) => {
+  const editPlace = async () => {
     const res = await Post({
       api: Api.placesEditApi,
       data: {
-        id: data.id,
-        responsible: data.userId,
-        placeName: data.placeName,
+        id: selected.id,
+        responsible: selected.user ? selected.user.value : "",
+        placeName: selected.placeName,
       },
     });
-    setPlaces(res);
-    setModal(!modal);
+    if (!res.error) {
+      setPlaces(res);
+      setModal(!modal);
+    }
   };
 
-  const contextFunctions = async (data) => {
+  const placeFunctions = async (data) => {
     switch (data.type) {
-      case "setModal":
-        setModal(!modal);
-        break;
-      case "getAllPlaces":
-        getAllPlaces();
-        break;
-      case "deletePlace":
-        removePlace(data.payload);
-        break;
+      //create
       case "createPlace":
         createPlace(data.payload);
         break;
+      //
+      //edit
+      case "closeEditModal":
+        setModal(!modal);
+        break;
+      case "setEditModal":
+        setModal(!modal);
+        setSelected(data.payload);
+        break;
+      case "editSelected":
+        setSelected(data.payload);
+        break;
       case "editPlace":
-        editPlace(data.payload);
+        editPlace();
+        break;
+      //delete
+      case "deletePlace":
+        removePlace(data.payload);
+        break;
+      //querry
+      case "getAllPlaces":
+        getAllPlaces();
+        break;
+      case "withoutManager":
+        getWithoutManager();
+        break;
+
+      //global company pages manager
+      case "setActivePage":
+        setActivePage(data.payload);
       default:
-        console.log(data.type);
+        alert(data.type);
     }
   };
 
   return (
     <CompanyContext.Provider
-      value={{ contextFunctions, modal, allUsers, places }}
+      value={{
+        placeFunctions,
+        modal,
+        places,
+        activePage,
+        withoutManager,
+        selected,
+      }}
     >
       {props.children}
     </CompanyContext.Provider>

@@ -1,21 +1,33 @@
-import React, { useContext } from "react";
-import { Form } from "react-bootstrap";
+import React from "react";
+import Select from "react-select";
 
-const StatusDropdown = ({ funk }) => {
+const StatusDropdown = ({ placeholder, valueSelected, onChange }) => {
+  var options = [
+    { value: "New", label: "New" },
+    { value: "Updated", label: "Updated" },
+    { value: "Approved", label: "Approved" },
+    { value: "Approved confirmed", label: "Approved confirmed" },
+  ];
+
   return (
-    <Form.Control
-      size="sm"
-      as="select"
-      onClick={(e) => {
-        funk(e.target.value);
-      }}
-    >
-      <option>{"select Status"}</option>
-      <option value={"New"}>New</option>
-      <option value={"Updated"}>Updated</option>
-      <option value={"Done"}>Done</option>
-      <option value={"Approved Done"}>Approved Done</option>
-    </Form.Control>
+    <Select
+      options={options}
+      onChange={(value) => onChange(value)}
+      placeholder={placeholder}
+      value={valueSelected}
+      theme={(theme) => ({
+        ...theme,
+        borderRadius: 4,
+        borderThickness: 1,
+
+        colors: {
+          ...theme.colors,
+          boxShadow: "#aaaaaa",
+          primary: "#aaaaaa",
+          primary25: "neutral5",
+        },
+      })}
+    />
   );
 };
 

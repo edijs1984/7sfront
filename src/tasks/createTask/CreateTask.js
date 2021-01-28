@@ -5,8 +5,11 @@ import UserDropdown from "../../comonComponents/dropdowns/userDropdown";
 import StatusDropdown from "../../comonComponents/dropdowns/statusDropdown";
 import PlaceDropdown from "../../comonComponents/dropdowns/placeDropdown";
 import { TaskContext } from "../taskContext";
-import Datums from "../../comonComponents/CustomDatePicker";
 import ObservationDropdown from "../../comonComponents/dropdowns/observationtypeDropdown";
+import Custominput from "../../comonComponents/CustomInput";
+import DatumsFilter from "../../comonComponents/DatePickerFilter";
+import Datums from "../../comonComponents/CustomDatePicker";
+import ReactDatePicker from "react-datepicker";
 
 const CreateTask = () => {
   const { taskFunctions, createModal } = useContext(TaskContext);
@@ -77,7 +80,8 @@ const CreateTask = () => {
               <Form.Group controlId="textinput3">
                 <Form.Label>Place</Form.Label>
                 <PlaceDropdown
-                  funk={(e) => setNewTask({ ...newTask, placeId: e })}
+                  onChange={(e) => setNewTask({ ...newTask, placeId: e.value })}
+                  clear={false}
                 />
               </Form.Group>
             </Col>
@@ -85,7 +89,10 @@ const CreateTask = () => {
               <Form.Group controlId="textinput3">
                 <Form.Label>Responsible</Form.Label>
                 <UserDropdown
-                  funk={(e) => setNewTask({ ...newTask, responsibleId: e })}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, responsibleId: e.value })
+                  }
+                  clear={false}
                 />
               </Form.Group>
             </Col>
@@ -93,7 +100,9 @@ const CreateTask = () => {
               <Form.Group controlId="textinput4">
                 <Form.Label>Priority</Form.Label>
                 <PriorityDropdown
-                  funk={(e) => setNewTask({ ...newTask, priority: e })}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, priority: e.value })
+                  }
                 />
               </Form.Group>
             </Col>
@@ -101,7 +110,7 @@ const CreateTask = () => {
               <Form.Group controlId="textinput5">
                 <Form.Label>Status</Form.Label>
                 <StatusDropdown
-                  funk={(e) => setNewTask({ ...newTask, status: e })}
+                  onChange={(e) => setNewTask({ ...newTask, status: e.value })}
                 />
               </Form.Group>
             </Col>
@@ -111,7 +120,9 @@ const CreateTask = () => {
                 <Form.Label>Observation</Form.Label>
 
                 <ObservationDropdown
-                  funk={(e) => setNewTask({ ...newTask, observationId: e })}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, observationId: e.value })
+                  }
                 />
               </Form.Group>
             </Col>
@@ -122,6 +133,7 @@ const CreateTask = () => {
                 <Row style={{ marginLeft: "0%" }}>
                   <Form.Label>Deadlien</Form.Label>
                 </Row>
+
                 <Datums
                   setDate={(e) => setNewTask({ ...newTask, deadline: e })}
                 />

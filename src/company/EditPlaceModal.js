@@ -1,34 +1,24 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 import { CompanyContext } from "./companyContetx";
-import UserDropdown from "./UserDropdown";
+import CustomInput from "../comonComponents/CustomInput";
+import UserDropdown from "../comonComponents/dropdowns/userDropdown";
 
-const EditPlaceModal = ({ selected }) => {
-  const { modal, contextFunctions, allUsers } = useContext(CompanyContext);
-  const [editedPlace, setEditedPlace] = useState({
-    placeName: "",
-    userId: "",
-  });
+const EditPlaceModal = () => {
+  const { modal, placeFunctions, selected } = useContext(CompanyContext);
 
   const Submit = (e) => {
     e.preventDefault();
-
-    contextFunctions({
+    placeFunctions({
       type: "editPlace",
-      payload: {
-        placeName: editedPlace.placeName || selected.placeName,
-        userId: editedPlace.userId || selected.userId,
-        id: selected.id,
-      },
     });
   };
-
   return (
     <>
       <Modal
         size="sm"
         show={modal}
-        onHide={() => contextFunctions({ type: "setModal" })}
+        onHide={() => placeFunctions({ type: "closeEditModal" })}
         aria-labelledby="example-modal-sizes-title-sm"
       >
         <Modal.Header closeButton>
@@ -40,24 +30,33 @@ const EditPlaceModal = ({ selected }) => {
           <Form onSubmit={Submit}>
             <Form.Group controlId="place">
               <Form.Label>Place</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter place name"
-                value={editedPlace.placeName || selected.placeName}
+              <CustomInput
+                value={selected.placeName}
                 onChange={(e) =>
-                  setEditedPlace({ ...editedPlace, placeName: e.target.value })
+                  placeFunctions({
+                    type: "editSelected",
+                    payload: { ...selected, placeName: e },
+                  })
                 }
-                style={{ marginBottom: "2%" }}
-              />
-
-              <UserDropdown
-                value={allUsers}
-                tx={selected.userName}
-                funk={(e) => setEditedPlace({ ...editedPlace, userId: e })}
               />
               <Form.Text className="text-muted"></Form.Text>
             </Form.Group>
-            <Button type="submit">Update</Button>
+
+            <Form.Group>
+              <Form.Label>Responsible</Form.Label>
+              <UserDropdown
+                onChange={(e) =>
+                  placeFunctions({
+                    type: "editSelected",
+                    payload: { ...selected, user: e },
+                  })
+                }
+                valueSelected={selected.user}
+              />
+            </Form.Group>
+            <Button disabled={!selected.user} type="submit">
+              Update
+            </Button>
           </Form>
         </Modal.Body>
       </Modal>
