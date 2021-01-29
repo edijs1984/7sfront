@@ -1,123 +1,104 @@
-import React, { useState, useContext } from "react";
-import { Table, Button } from "react-bootstrap";
-import Pagin from "../../comonComponents/pagination";
-import EditUserModal from "./editUserModal";
-import { AuthContext } from "../../context/auth";
-import Axios from "axios";
-import { apiUrl } from "../../config.json";
-import { ToastContext } from "./../../context/toastContext";
-const UserTable = ({
-  currentPosts,
-  paginate,
-  posts,
-  postsPerPage,
-  deleteUser,
-  updateUser,
-}) => {
-  const [selected, setSelected] = useState([]);
-  const [openModal, setOpenModal] = useState(false);
-  const { notify, badNotify } = useContext(ToastContext);
-  const token = localStorage.getItem("JwtToken");
-  const { user } = useContext(AuthContext);
+import React, { useState, useContext, useEffect } from "react";
+import { Row, Table } from "react-bootstrap";
+import { UserContext } from "../userContext";
+import EditUserModal from "../editUser/editUserModal";
+import DeleteBtn from "../../comonComponents/buttons/deleteButton";
+import EditBtn from "../../comonComponents/buttons/editButton";
+import ResetBtn from "../../comonComponents/buttons/resetButton";
 
-  const resetPassword = async (item) => {
-    try {
-      await Axios.patch(
-        apiUrl + "/api/user/reset",
-        {
-          id: item,
-          comp: user.company,
-          password: Math.random().toString(36).replace("0.", ""),
-        },
-        { headers: { "auth-token": token } }
-      );
+const UserTable = () => {
+  const { userFunctions, allUsers } = useContext(UserContext);
 
-      notify("Password reset is done");
-      updateUser();
-    } catch (e) {
-      badNotify(e);
-    }
-  };
-
-  const modalManage = () => setOpenModal(!openModal);
-
-  return (
+  const [selectedUser, setSelectedUser] = useState({
+    name: "",
+    email: "",
+    workPlace: "",
+    manager: false,
+    isAdmin: false,
+  });
+  return !allUsers ? (
+    <>...Loding</>
+  ) : (
     <React.Fragment>
-      <Table size="sm">
-        <thead>
-          <tr style={{ fontSize: 18, color: "#ff6600", textAlign: "center" }}>
+      <Table striped bordered hover size="sm">
+        <thead
+          style={{
+            backgroundColor: "#2f3c48",
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          <tr>
+            <td>Reset password</td>
             <td>User Name</td>
             <td>User Email</td>
-            <td>Department</td>
+            <td>Workplace</td>
             <td>Manager</td>
             <td>Responsible</td>
             <td>Admin</td>
-            <td>Reset</td>
-            <td>Edit</td>
+            <td>Delete</td>
           </tr>
         </thead>
 
         <tbody>
-          {currentPosts.map((item) => {
+          {allUsers.map((item) => {
             return (
-              <tr key={item._id} style={{ textAlign: "center" }}>
+              <tr
+                key={item._id}
+                style={{ textAlign: "center" }}
+                onDoubleClick={() => {
+                  userFunctions({
+                    type: "editUserModal",
+                    payload: {
+                      id: item._id,
+                      name: item.name,
+                      email: item.email,
+                      manager: item.manager,
+                      isAdmin: item.isAdmin,
+                      place: {
+                        value: item.workPlace._id,
+                        label: item.workPlace.placeName,
+                      },
+                    },
+                  });
+                }}
+              >
+                <td style={{ width: "8%" }}>
+                  <ResetBtn
+                    onClick={() =>
+                      userFunctions({
+                        type: "resetPassword",
+                        payload: item._id,
+                      })
+                    }
+                  />
+                </td>
                 <td>{item.name} </td>
                 <td>{item.email}</td>
-                <td>{!item.department ? "NON" : item.department}</td>
-                <td>{item.maneger + ""}</td>
+                <td>{!item.workPlace ? "Non" : item.workPlace.placeName}</td>
+                <td>{item.manager + ""}</td>
                 <td>
-                  {item.responsible.map((obj, index) => {
-                    return obj + ", ";
+                  {item.responsibleForPlace.map((obj) => {
+                    return obj.placeName + ",";
                   })}
                 </td>
                 <td>{item.isAdmin + ""}</td>
-                <td>
-                  <Button
-                    size="sm"
-                    variant="info"
-                    onClick={() => {
-                      resetPassword(item._id, item.name);
-                    }}
-                  >
-                    Reset Password
-                  </Button>
-                </td>
-                <td>
-                  <Button
-                    size="sm"
-                    variant="warning"
-                    onClick={() => {
-                      setSelected(item);
-                      modalManage();
-                    }}
-                  >
-                    Edit
-                  </Button>
-
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    onClick={() => deleteUser(item._id)}
-                  >
-                    Delete
-                  </Button>
+                <td style={{ width: "4%" }}>
+                  <DeleteBtn
+                    onClick={() =>
+                      userFunctions({
+                        type: "deleteUser",
+                        payload: { id: item._id },
+                      })
+                    }
+                  />
                 </td>
               </tr>
             );
           })}
         </tbody>
       </Table>
-      <Pagin
-        postsPerPage={postsPerPage}
-        totalPosts={posts.length}
-        paginate={paginate}
-      />
-      <EditUserModal
-        selected={selected}
-        openModal={openModal}
-        modalManage={modalManage}
-        updateUser={() => updateUser()}
-      />
+      <EditUserModal selectedUser={selectedUser} />
     </React.Fragment>
   );
 };

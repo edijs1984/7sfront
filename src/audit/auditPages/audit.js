@@ -1,20 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Table, Button, Container } from "react-bootstrap";
-import Pagin from "./../../comonComponents/pagination";
 import { AuthContext } from "../../context/auth";
 import { SingleAuditContext } from "./../../context/singleAuditContext";
 import Axios from "axios";
 import { apiUrl } from "../../config.json";
 
 const Audit = () => {
-  const [posts, setPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(10);
   const token = localStorage.getItem("JwtToken");
   const { user } = useContext(AuthContext);
   const [, setEditAuditData] = useContext(SingleAuditContext);
-
+  const [posts, setPosts] = useState([]);
   useEffect(() => {
     const fetchResult = async () => {
       const res = await Axios.post(
@@ -28,10 +24,6 @@ const Audit = () => {
     fetchResult();
   }, [user, token]);
 
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexofFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexofFirstPost, indexOfLastPost);
-  const paginate = pageNumber => setCurrentPage(pageNumber);
   return (
     <Container>
       <h1 style={{ fontSize: 40, color: "#ff6600", fontWeight: "bold" }}>
@@ -48,7 +40,7 @@ const Audit = () => {
           </tr>
         </thead>
         <tbody>
-          {currentPosts.map(item => {
+          {posts.map((item) => {
             return (
               <tr key={item._id}>
                 <td>{item.name} </td>
@@ -63,7 +55,7 @@ const Audit = () => {
                     variant="success"
                     onClick={() =>
                       setEditAuditData({
-                        ...item
+                        ...item,
                       })
                     }
                   >
@@ -78,11 +70,6 @@ const Audit = () => {
           })}
         </tbody>
       </Table>
-      <Pagin
-        postsPerPage={postsPerPage}
-        totalPosts={posts.length}
-        paginate={paginate}
-      />
     </Container>
   );
 };

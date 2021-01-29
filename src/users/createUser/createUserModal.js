@@ -1,167 +1,124 @@
-import React, { useState, useEffect } from "react";
-import { Form, Button, Container, Modal } from "react-bootstrap";
-import BootstrapDropdown from "../../comonComponents/BootstarpDropdown";
-import BootstrapDropdownMultiple from "../../comonComponents/BootstarpDropdownMultiple";
-import { Post, Company } from "../../helpers/axioPost";
+import React, { useContext, useState } from "react";
+import { Form, Button, Container, Modal, Row } from "react-bootstrap";
+import CustomInput from "../../comonComponents/CustomInput";
+import { UserContext } from "../userContext";
+import PlaceDropdown from "../../comonComponents/dropdowns/placeDropdown";
+import PlaceMultipleDropdown from "../../comonComponents/dropdowns/PlaceMultipleDropdown";
 
-const CreateUserModal = ({ shoWmodal, closeModal }) => {
-  const [smShow, setSmShow] = useState(true);
-  const [manager, setManager] = useState(false);
-  const [admin, setAdmin] = useState(false);
-  const [department, setDepartment] = useState("");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+const CreateUserModal = () => {
+  const { createModal, userFunctions } = useContext(UserContext);
+
   const [responsible, setResponsible] = useState([]);
-  const [places, setPlaces] = useState([]);
-  const [allPlaces, setAllPlaces] = useState([]);
-  const [count, setCount] = useState(0);
-
-  const ress = async () => {
-    const res = await Post({
-      api: "/api/plant/all/department",
-      notifytrue: false,
-    });
-    const value = res.filter(
-      (value) => !value.responsible || value.responsible === ""
-    );
-    setAllPlaces(res);
-    setPlaces(value);
-  };
-
-  useEffect(() => {
-    ress();
-  }, [count]);
-
-  function clearAll() {
-    setManager(false);
-    setAdmin(false);
-    setDepartment("");
-    setName("");
-    setEmail("");
-    setResponsible([""]);
-    setPlaces([]);
-    setCount(count + 1);
-  }
-
-  const post = async (e) => {
+  const [place, setPlace] = useState("");
+  const [user, setUser] = useState({
+    isAdmin: false,
+    manager: false,
+    responsibleForPlace: [],
+  });
+  console.log(responsible);
+  const create = async (e) => {
     e.preventDefault();
-    clearAll();
-    Post({
-      api: "/api/user/create",
-      data: {
-        name: name,
-        email: email,
-        isAdmin: admin,
-        department: department,
-        maneger: manager,
-        responsible: responsible,
-        company: Company,
-      },
-      notifytrue: true,
-      message: "User created",
+    responsible.forEach((i) => user.responsibleForPlace.push(i.value));
+    await userFunctions({
+      type: "createUser",
+      payload: { ...user, workPlace: place.value },
     });
+    setUser({ isAdmin: false, manager: false, responsibleForPlace: [] });
+    setPlace("");
   };
 
-  const EditResponsible = async (value) => {
-    setResponsible(responsible.filter((resp) => resp !== value));
-  };
   return (
     <div>
       <Modal
-        show={shoWmodal}
-        onHide={closeModal}
+        show={createModal}
+        onHide={() => {
+          userFunctions({ type: "createUserModal" });
+        }}
         aria-labelledby="example-modal-sizes-title-sm"
       >
-        <Modal.Header closeButton={() => closeModal()}>
+        <Modal.Header
+          closeButton={() => {
+            userFunctions({ type: "createUserModal" });
+          }}
+        >
           <Modal.Title id="example-modal-sizes-title-sm">
             Create User
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Container>
-            <div style={{ width: "70%", margin: "10%" }}>
-              <Form onSubmit={post}>
+            <div style={{ width: "90%", margin: "2%" }}>
+              <Form onSubmit={create}>
                 <Form.Group controlId="formHorizontalEmail">
                   <Form.Label>Email</Form.Label>
-
-                  <Form.Control
+                  <CustomInput
+                    required={true}
                     type="email"
-                    placeholder="Email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
+                    placeholder={"Email"}
+                    onChange={(e) => setUser({ ...user, email: e })}
+                    value={user.email || ""}
                   />
                 </Form.Group>
-
+                {/* // */}
                 <Form.Group controlId="formHorizontalName">
                   <Form.Label>Name</Form.Label>
-
-                  <Form.Control
-                    placeholder="Name"
-                    onChange={(e) => setName(e.target.value)}
-                    value={name}
+                  <CustomInput
+                    required={true}
+                    placeholder={"Name"}
+                    onChange={(e) => setUser({ ...user, name: e })}
+                    value={user.name || ""}
                   />
                 </Form.Group>
+                {/* // */}
                 <Form.Group controlId="formHorizontalEmail">
-                  <Form.Label>Place</Form.Label>
-
-                  <BootstrapDropdown
-                    value={places}
-                    shit={department}
-                    funk={(e) => setDepartment(e)}
+                  <Form.Label>Working Place:</Form.Label>
+                  <PlaceDropdown
+                    placeholder={"Select work place"}
+                    valueSelected={place}
+                    onChange={(e) => {
+                      setPlace(e);
+                    }}
                   />
                 </Form.Group>
-
+                {/* // */}
                 <Form.Group controlId="formHorizontalCheck">
                   <Form.Check
+                    defaultValue={false}
                     type="switch"
                     id="custom-switch"
                     label="Administrator"
-                    onChange={() => setAdmin(!admin)}
-                    checked={admin}
+                    onChange={() =>
+                      setUser({ ...user, isAdmin: !user.isAdmin })
+                    }
+                    checked={user.isAdmin}
                   />
                 </Form.Group>
+                {/* // */}
                 <Form.Group controlId="formHorizontalCheck">
                   <Form.Check
+                    defaultValue={false}
                     type="switch"
                     id="custom"
                     label="Manager"
-                    onChange={() => setManager(!manager)}
-                    checked={manager}
+                    onChange={() =>
+                      setUser({ ...user, manager: !user.manager })
+                    }
+                    checked={user.manager}
                   />
                 </Form.Group>
-
-                {!manager ? (
-                  ""
-                ) : (
-                  <div>
-                    <Form.Group controlId="formHorizontalEmail">
-                      <Form.Label>Add Places </Form.Label>
-
-                      <BootstrapDropdown
-                        funk={(e) => setResponsible([...responsible, e])}
-                        value={places}
-                      />
-                    </Form.Group>
-                    <Form.Group controlId="formHorizontalEmail">
-                      <Form.Label>Places responsible for:</Form.Label>
-
-                      <BootstrapDropdownMultiple
-                        value={responsible}
-                        funk={(e) => EditResponsible(e)}
-                      />
-                      <Form.Label>
-                        <h6 style={{ color: "blue" }}>
-                          Click on place to remove
-                        </h6>
-                      </Form.Label>
-                    </Form.Group>
+                {/* // */}
+                {user.manager === true ? (
+                  <div style={{ marginBottom: "20%" }}>
+                    <PlaceMultipleDropdown
+                      onChange={(e) => setResponsible(e)}
+                      valueSelected={responsible}
+                    />
                   </div>
+                ) : (
+                  ""
                 )}
                 <Form.Group>
-                  <Button
-                    disabled={name === "" || email === "" || department === ""}
-                    type="submit"
-                  >
+                  <Button disabled={!place} type="submit">
                     Create
                   </Button>
                 </Form.Group>

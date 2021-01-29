@@ -6,99 +6,86 @@ import {
   Switch,
   Redirect,
 } from "react-router-dom";
+// context
+import { AuthProvider } from "../src/context/auth";
+import { ToastProvider } from "./context/toastContext";
+import { UserProvider } from "./users/userContext";
+import { CompanyProvider } from "./company/companyContetx";
+import { AuditProvider } from "./audit/auditContext";
+import { TaskProvider } from "./tasks/taskContext";
+
+// components
 import { Container } from "react-bootstrap";
 import LoginForm from "./users/usersPages/login";
 import MenuBar from "./comonComponents/menuBar";
-import CreateUser from "./users/usersPages/createUser";
-import { AuthProvider } from "../src/context/auth";
-import AuthRoute from "./users/userComponents/authRoutes";
-import AdminRoutes from "./users/userComponents/adminRoutes";
-import { EditTaskProvider } from "./context/editTaskContext";
-import { ToastProvider } from "./context/toastContext";
-import { CustomInputProvider } from "./context/customInputContext";
-import EditUser from "./users/usersPages/editUser";
-import AuditRulles from "./audit/auditPages/auditRulles";
+import MainUserPage from "./users/usersPages/MainUserPage";
+import AdminRoutes from "./users/userRouteComponents/adminRoutes";
+import AuthRoute from "./users/userRouteComponents/authRoutes";
+import AuditRulles from "./audit/auditRulles/auditRulles";
 import Audit from "./audit/auditPages/audit";
-import QuickTask from "./tasks/quicktasks/quicktask";
 import Settings from "./settings/settings";
-import CompanySettings from "./cp/companySettings";
-import { CompanyProvider } from "./context/companyContetx";
 import SingleAuditResult from "./audit/auditPages/singleAuditResult";
-import { SingleAuditProvider } from "./context/singleAuditContext";
-import { ModalProvider } from "./context/modalContext";
-import ChartDashboard from "./charts/chartDashboard";
+import Myprofile from "./users/usersPages/MyProfile";
+import Tasks from "./tasks/taskPages.js/tasks";
+import Company from "./company/Company";
 
+// app
 const App = () => {
   return (
     <AuthProvider>
-      <ToastProvider>
-        <CustomInputProvider>
-          <ModalProvider>
-            <EditTaskProvider>
-              <CompanyProvider>
-                <SingleAuditProvider>
-                  <Router>
-                    <MenuBar />
-                    <Container fluid>
-                      <Switch>
-                        <Route path="/login" exact component={LoginForm} />
-                        <AuthRoute
-                          path="/quicktasks"
-                          exact
-                          component={QuickTask}
-                        />
-
-                        <AuthRoute
-                          path="/dashboard"
-                          exact
-                          component={ChartDashboard}
-                        />
-                        <AdminRoutes
-                          path="/user/create"
-                          exact
-                          component={CreateUser}
-                        />
-                        <AuthRoute
-                          path="/user/edit"
-                          exact
-                          component={EditUser}
-                        />
-                        <AuthRoute path="/audit" exact component={Audit} />
-                        <AuthRoute
+      <UserProvider>
+        <CompanyProvider>
+          <TaskProvider>
+            <ToastProvider>
+              <AuditProvider>
+                <Router>
+                  <MenuBar />
+                  <Container fluid>
+                    <Switch>
+                      <Route path="/login" exact component={LoginForm} />
+                      {/* 
+                                  <AuthRoute
+                                  path="/dashboard"
+                                  exact
+                                  component={ChartDashboard}
+                                /> */}
+                      <AdminRoutes
+                        path="/user/create"
+                        exact
+                        component={MainUserPage}
+                      />
+                      <AuthRoute
+                        path="/user/profile"
+                        exact
+                        component={Myprofile}
+                      />
+                      {/* <AuthRoute path="/audit" exact component={Audit} />
+                          <AuthRoute
                           path="/auditresult"
                           exact
                           component={SingleAuditResult}
-                        />
-                        <AuthRoute
-                          path="/quicktasks"
-                          exact
-                          component={QuickTask}
-                        />
-                        <AdminRoutes
-                          path="/settings"
-                          exact
-                          component={Settings}
-                        />
-                        <AdminRoutes
-                          path="/company"
-                          exact
-                          component={CompanySettings}
-                        />
-                        <AdminRoutes
-                          path="/auditrulles"
-                          ecact
-                          component={AuditRulles}
-                        />
-                        <Redirect to="/quicktasks" />
-                      </Switch>
-                    </Container>
-                  </Router>
-                </SingleAuditProvider>
-              </CompanyProvider>
-            </EditTaskProvider>
-          </ModalProvider>
-        </CustomInputProvider>
-      </ToastProvider>
+                          /> */}
+                      <AuthRoute path="/tasks" exact component={Tasks} />
+                      <AdminRoutes
+                        path="/settings"
+                        exact
+                        component={Settings}
+                      />
+                      <AdminRoutes path="/company" exact component={Company} />
+                      <AdminRoutes
+                        path="/auditrulles"
+                        ecact
+                        component={AuditRulles}
+                      />
+                      <Redirect to="/quicktasks" />
+                    </Switch>
+                  </Container>
+                </Router>
+              </AuditProvider>
+            </ToastProvider>
+          </TaskProvider>
+        </CompanyProvider>
+      </UserProvider>
     </AuthProvider>
   );
 };

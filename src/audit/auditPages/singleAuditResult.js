@@ -4,7 +4,6 @@ import { SingleAuditContext } from "./../../context/singleAuditContext";
 import { AuthContext } from "../../context/auth";
 import Axios from "axios";
 import { apiUrl } from "../../config.json";
-import Pagin from "./../../comonComponents/pagination";
 import ImageModal from "./../../tasks/quicktasks/imageModal";
 import { Container } from "react-bootstrap";
 import AuditCreateTAskModal from "./AuditCreateTaskModal";
@@ -14,8 +13,6 @@ const SingleAuditResult = () => {
   const { user } = useContext(AuthContext);
   const [editAuditData] = useContext(SingleAuditContext);
   const [posts, setPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(10);
   const [openImgModal, setOpenImgModal] = useState(false);
   const [img, setImg] = useState([]);
   const [modal, setModal] = useState(false);
@@ -43,10 +40,6 @@ const SingleAuditResult = () => {
       </div>
     );
   } else {
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexofFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = posts.slice(indexofFirstPost, indexOfLastPost);
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
     return (
       <Container>
         <h1 style={{ fontSize: 40, color: "#ff6600", fontWeight: "bold" }}>
@@ -65,7 +58,7 @@ const SingleAuditResult = () => {
             </tr>
           </thead>
           <tbody>
-            {currentPosts.map((item) => {
+            {posts.map((item) => {
               return (
                 <tr key={item._id}>
                   <td>{editAuditData.name} </td>
@@ -104,11 +97,7 @@ const SingleAuditResult = () => {
             })}
           </tbody>
         </Table>
-        <Pagin
-          postsPerPage={postsPerPage}
-          totalPosts={posts.length}
-          paginate={paginate}
-        />
+
         <ImageModal
           openImgModal={openImgModal}
           setOpenImgModal={setOpenImgModal}

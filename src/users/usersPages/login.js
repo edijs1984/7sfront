@@ -4,7 +4,7 @@ import { apiUrl } from "../../../src/config.json";
 import Axios from "axios";
 import { AuthContext } from "../../context/auth";
 import { ToastContext } from "./../../context/toastContext";
-
+import { loginApi, loginConfimrApi } from "../../apiLinks/httpUsers";
 const LoginForm = () => {
   const context = useContext(AuthContext);
   const [approved, setapproved] = useState(false);
@@ -16,7 +16,7 @@ const LoginForm = () => {
   const login = async (e) => {
     e.preventDefault();
     try {
-      const res = await Axios.post(apiUrl + "/api/user/login", {
+      const res = await Axios.post(apiUrl + loginApi, {
         email: Mail,
         password: Pwd,
       });
@@ -35,7 +35,7 @@ const LoginForm = () => {
   const aproveResult = async (e) => {
     e.preventDefault();
     try {
-      const res = await Axios.post(apiUrl + "/api/user/confirm", {
+      const res = await Axios.post(apiUrl + loginConfimrApi, {
         email: Mail,
         password: Pwd,
         code: code,

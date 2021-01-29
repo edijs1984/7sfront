@@ -35,14 +35,14 @@ const MenuBar = () => {
         <Navbar.Brand style={CompanyStyle}>{comp}</Navbar.Brand>
         <Nav
           className="mr-auto"
-          activeKey="/quicktask"
+          activeKey="/tasks"
           onSelect={(selectedKey) => setActive(selectedKey)}
         >
           <Nav.Link
             as={Link}
-            to="/quicktasks"
-            style={active === "/quicktask" ? activated : linkStyles}
-            href="/quicktask"
+            to="/tasks"
+            style={active === "/tasks" ? activated : linkStyles}
+            href="/tasks"
           >
             Observations
           </Nav.Link>
@@ -83,8 +83,8 @@ const MenuBar = () => {
           )}
           <Nav.Link
             as={Link}
-            to="/user/edit"
-            style={active === "/user/edit" ? activated : linkStyles}
+            to="/user/profile"
+            style={active === "/user/profile" ? activated : linkStyles}
             href="/user/edit"
           >
             {curentUser}

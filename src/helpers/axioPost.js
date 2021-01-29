@@ -9,7 +9,7 @@ const decodedToken = () => {
     return JwtDecode(localStorage.getItem("JwtToken"));
   }
 };
-const token = localStorage.getItem("JwtToken");
+export const token = localStorage.getItem("JwtToken");
 
 toast.configure({
   autoClose: 3000,
@@ -33,22 +33,29 @@ export const Admin = token ? decodedToken().isAdmin : "";
 export const User = token ? decodedToken() : "";
 export const Company = token ? decodedToken().company : "";
 
+// functions
+
 export const Post = async ({ api, data, message, notifytrue }) => {
   try {
     const res = await Axios.post(
       apiUrl + api,
       {
-        company: Company,
-        data,
+        data: { ...data, company: Company },
       },
       { headers: { "auth-token": token } }
     );
-    if (notifytrue !== false) {
-      notify(message);
+
+    if (!res.data.data) {
+      if (res.data.message) {
+        notify(res.data.message);
+      }
+      return res.data;
+    } else {
+      notify(res.data.message);
+      return res.data.data;
     }
-    console.log(res.data);
-    return res.data;
-  } catch (e) {
-    badNotify(e.response.data);
+  } catch (error) {
+    badNotify(error.response.data);
+    return { error: error };
   }
 };
