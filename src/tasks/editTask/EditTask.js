@@ -28,10 +28,10 @@ const EditTask = () => {
       >
         <Modal.Header
           closeButton
-          style={{ backgroundColor: "#163a5f", color: "white" }}
+          style={{ backgroundColor: "#2f3c48", color: "white" }}
         >
           <Modal.Title id="example-modal-sizes-title-lg">
-            Create Task
+            Edit Observation
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -151,7 +151,13 @@ const EditTask = () => {
                 </Row>
 
                 <Datums
-                //   setDate={(e) => setNewTask({ ...newTask, deadline: e })}
+                  selectedDate={selectedTask.deadline}
+                  setDate={(e) =>
+                    taskFunctions({
+                      type: "editSelectedTask",
+                      payload: { ...selectedTask, deadline: e },
+                    })
+                  }
                 />
               </Form.Group>
             </Col>

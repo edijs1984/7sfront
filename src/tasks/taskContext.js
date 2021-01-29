@@ -4,6 +4,7 @@ import * as Api from "../apiLinks/httpTasks";
 import * as Obs from "../apiLinks/httpPlaces";
 //
 export const TaskContext = createContext();
+//
 export const TaskProvider = (props) => {
   const [tasks, setTasks] = useState([]);
   const [createModal, setCreateModal] = useState(false);
@@ -48,6 +49,17 @@ export const TaskProvider = (props) => {
         creator: selectedTask.creator,
       },
     });
+    setEditTaskModal(!editTaskModal);
+    if (!res.error) {
+      setTasks(res);
+    }
+  };
+
+  const archive = async (data) => {
+    const res = await Post({
+      api: Api.archiveTaskApi,
+      data: { id: data },
+    });
     if (!res.error) {
       setTasks(res);
     }
@@ -82,6 +94,9 @@ export const TaskProvider = (props) => {
         break;
       case "closeEditTaskModal":
         setEditTaskModal(!editTaskModal);
+        break;
+      case "archive":
+        archive(data.payload);
         break;
       default:
         console.log(data.type);

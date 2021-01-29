@@ -3,7 +3,7 @@ import { TaskContext } from "../taskContext";
 import { Table, Button } from "react-bootstrap";
 import { changedate } from "../../helpers/editDate";
 import ArchBtn from "../../comonComponents/buttons/archiveButton";
-import EditBtn from "../../comonComponents/buttons/editButton";
+
 const TaskTable = () => {
   const { taskFunctions, tasks } = useContext(TaskContext);
 
@@ -38,14 +38,45 @@ const TaskTable = () => {
             <td>Status</td>
             <td>Priority</td>
             <td>Deadline</td>
-            <td>Edit</td>
             <td>Archive</td>
           </tr>
         </thead>
         <tbody>
           {tasks.map((item) => {
             return (
-              <tr key={item._id} style={{ textAlign: "center" }}>
+              <tr
+                key={item._id}
+                style={{ textAlign: "center" }}
+                onDoubleClick={() =>
+                  taskFunctions({
+                    type: "editTaskModal",
+                    payload: {
+                      id: item._id,
+                      creator: item.creator,
+                      issue: item.issue,
+                      comment: item.comment,
+                      deadline: item.deadline,
+                      observationtype: {
+                        value: item.observationtype._id,
+                        label: item.observationtype.observationName,
+                      },
+                      place: {
+                        value: item.place._id,
+                        label: item.place.placeName,
+                      },
+                      priority: {
+                        value: item.priority,
+                        label: item.priority,
+                      },
+                      responsible: {
+                        value: item.responsible._id,
+                        label: item.responsible.name,
+                      },
+                      status: { value: item.status, label: item.status },
+                    },
+                  })
+                }
+              >
                 <td>{item.seq}</td>
                 <td>{item.issue}</td>
                 <td>{item.place ? item.place.placeName : ""}</td>
@@ -62,40 +93,11 @@ const TaskTable = () => {
                 <td>{item.priority ? item.priority : ""}</td>
                 <td>{changedate(item.deadline)}</td>
                 <td>
-                  <EditBtn
+                  <ArchBtn
                     onClick={() =>
-                      taskFunctions({
-                        type: "editTaskModal",
-                        payload: {
-                          id: item._id,
-                          creator: item.creator,
-                          issue: item.issue,
-                          comment: item.comment,
-                          deadline: item.deadline,
-                          observationtype: {
-                            value: item.observationtype._id,
-                            label: item.observationtype.observationName,
-                          },
-                          place: {
-                            value: item.place._id,
-                            label: item.place.placeName,
-                          },
-                          priority: {
-                            value: item.priority,
-                            label: item.priority,
-                          },
-                          responsible: {
-                            value: item.responsible._id,
-                            label: item.responsible.name,
-                          },
-                          status: { value: item.status, label: item.status },
-                        },
-                      })
+                      taskFunctions({ type: "archive", payload: item._id })
                     }
                   />
-                </td>
-                <td>
-                  <ArchBtn onclick={() => console.log("archive this")} />
                 </td>
               </tr>
             );

@@ -45,7 +45,7 @@ const CreateTask = () => {
           style={{ backgroundColor: "#163a5f", color: "white" }}
         >
           <Modal.Title id="example-modal-sizes-title-lg">
-            Create Task
+            Create Observation
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>

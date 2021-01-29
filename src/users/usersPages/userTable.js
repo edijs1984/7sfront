@@ -36,7 +36,6 @@ const UserTable = () => {
             <td>Manager</td>
             <td>Responsible</td>
             <td>Admin</td>
-            <td>Edit</td>
             <td>Delete</td>
           </tr>
         </thead>
@@ -44,7 +43,26 @@ const UserTable = () => {
         <tbody>
           {allUsers.map((item) => {
             return (
-              <tr key={item._id} style={{ textAlign: "center" }}>
+              <tr
+                key={item._id}
+                style={{ textAlign: "center" }}
+                onDoubleClick={() => {
+                  userFunctions({
+                    type: "editUserModal",
+                    payload: {
+                      id: item._id,
+                      name: item.name,
+                      email: item.email,
+                      manager: item.manager,
+                      isAdmin: item.isAdmin,
+                      place: {
+                        value: item.workPlace._id,
+                        label: item.workPlace.placeName,
+                      },
+                    },
+                  });
+                }}
+              >
                 <td style={{ width: "8%" }}>
                   <ResetBtn
                     onClick={() =>
@@ -65,26 +83,6 @@ const UserTable = () => {
                   })}
                 </td>
                 <td>{item.isAdmin + ""}</td>
-                <td style={{ width: "4%" }}>
-                  <EditBtn
-                    onClick={() => {
-                      userFunctions({
-                        type: "editUserModal",
-                        payload: {
-                          id: item._id,
-                          name: item.name,
-                          email: item.email,
-                          manager: item.manager,
-                          isAdmin: item.isAdmin,
-                          place: {
-                            value: item.workPlace._id,
-                            label: item.workPlace.placeName,
-                          },
-                        },
-                      });
-                    }}
-                  />
-                </td>
                 <td style={{ width: "4%" }}>
                   <DeleteBtn
                     onClick={() =>

@@ -37,14 +37,34 @@ const PlaceTabel = () => {
                   <td>Place Name</td>
                   <td>Users assigned</td>
                   <td>Responsible</td>
-                  <td>Edit</td>
+
                   <td>Delete</td>
                 </tr>
               </thead>
               <tbody>
                 {place.map((pla) => {
                   return (
-                    <tr key={pla._id} style={{ textAlign: "center" }}>
+                    <tr
+                      key={pla._id}
+                      style={{ textAlign: "center" }}
+                      onDoubleClick={() => {
+                        placeFunctions({
+                          type: "setEditModal",
+                          payload: {
+                            id: pla._id,
+                            placeName: pla.placeName,
+                            user: {
+                              value: pla.responsible
+                                ? pla.responsible._id
+                                : null,
+                              label: pla.responsible
+                                ? pla.responsible.name
+                                : null,
+                            },
+                          },
+                        });
+                      }}
+                    >
                       <td>{pla.placeName}</td>
                       <td></td>
                       <td>
@@ -53,27 +73,6 @@ const PlaceTabel = () => {
                         ) : (
                           <h6 style={{ color: "red" }}>No responsible</h6>
                         )}
-                      </td>
-                      <td>
-                        <EditBtn
-                          onClick={() => {
-                            placeFunctions({
-                              type: "setEditModal",
-                              payload: {
-                                id: pla._id,
-                                placeName: pla.placeName,
-                                user: {
-                                  value: pla.responsible
-                                    ? pla.responsible._id
-                                    : null,
-                                  label: pla.responsible
-                                    ? pla.responsible.name
-                                    : null,
-                                },
-                              },
-                            });
-                          }}
-                        />
                       </td>
                       <td>
                         <DeleteBtn

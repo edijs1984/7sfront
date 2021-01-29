@@ -11,8 +11,6 @@ export const UserProvider = (props) => {
   const [editModal, setEditModal] = useState(false);
   const [selected, setSelected] = useState({});
 
-  console.log(selected);
-
   //functions
   const deleteUser = async (data) => {
     const res = await Post({
@@ -71,7 +69,6 @@ export const UserProvider = (props) => {
   };
 
   const createUser = async (data) => {
-    console.log(data);
     const res = await Post({
       api: Api.userCreateApi,
       data: {
