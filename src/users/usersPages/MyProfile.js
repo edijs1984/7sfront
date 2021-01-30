@@ -3,14 +3,14 @@ import { Form, Button } from "react-bootstrap";
 import { UserContext } from "../userContext";
 
 const Myprofile = () => {
-  const { User, dispatch } = useContext(UserContext);
+  const { User, userFunctions } = useContext(UserContext);
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const change = () => {
     if (password === newPassword) {
-      dispatch({ type: "changePassword", payload: password });
+      userFunctions({ type: "changePassword", payload: password });
     } else setMessage("Password doest match");
     setNewPassword("");
     setPassword("");
@@ -21,7 +21,7 @@ const Myprofile = () => {
       <h1>{User.name || ""}</h1>
 
       <Form>
-        <Form.Group controlId="formHorizontalName">
+        <Form.Group>
           <Form.Label>NewPassword</Form.Label>
           <Form.Control
             placeholder="NewPassword"
@@ -33,7 +33,7 @@ const Myprofile = () => {
             type="password"
           />
         </Form.Group>
-        <Form.Group controlId="formHorizontalName">
+        <Form.Group>
           <Form.Label>Confirm NewPassword</Form.Label>
           <Form.Control
             placeholder="Confirm NewPassword"
