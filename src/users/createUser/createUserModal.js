@@ -49,7 +49,7 @@ const CreateUserModal = () => {
           <Container>
             <div style={{ width: "90%", margin: "2%" }}>
               <Form onSubmit={create}>
-                <Form.Group controlId="formHorizontalEmail">
+                <Form.Group>
                   <Form.Label>Email</Form.Label>
                   <CustomInput
                     required={true}
@@ -60,7 +60,7 @@ const CreateUserModal = () => {
                   />
                 </Form.Group>
                 {/* // */}
-                <Form.Group controlId="formHorizontalName">
+                <Form.Group>
                   <Form.Label>Name</Form.Label>
                   <CustomInput
                     required={true}
@@ -70,7 +70,7 @@ const CreateUserModal = () => {
                   />
                 </Form.Group>
                 {/* // */}
-                <Form.Group controlId="formHorizontalEmail">
+                <Form.Group>
                   <Form.Label>Working Place:</Form.Label>
                   <PlaceDropdown
                     placeholder={"Select work place"}
