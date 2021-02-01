@@ -1,8 +1,9 @@
 import React, { useState, useContext } from "react";
 import { Form, Button, Col } from "react-bootstrap";
-import UserDropdown from "../comonComponents/dropdowns/userDropdown";
-import { CompanyContext } from "./companyContetx";
-import CustomInput from "../comonComponents/CustomInput";
+import UserDropdown from "../../comonComponents/dropdowns/userDropdown";
+import { CompanyContext } from "../companyContetx";
+import CustomInput from "../../comonComponents/CustomInput";
+import placeTypes from "../funcTypes/placeFunc";
 
 const PlacesHeader = () => {
   const { placeFunctions } = useContext(CompanyContext);
@@ -12,7 +13,7 @@ const PlacesHeader = () => {
   const submit = (e) => {
     e.preventDefault();
     placeFunctions({
-      type: "createPlace",
+      type: placeTypes.createPlace,
       payload: {
         placeName: newPlaceName,
         responsible: responsible.value,

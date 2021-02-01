@@ -1,6 +1,8 @@
 import React, { createContext, useState } from "react";
 import { Post } from "../helpers/axioPost";
-import * as Api from "../apiLinks/httpPlaces";
+import * as Api from "../apiLinks/httpCompany";
+import placeFunc from "./funcTypes/placeFunc";
+import obsFunc from "./funcTypes/obsFunc";
 
 export const CompanyContext = createContext();
 export const CompanyProvider = (props) => {
@@ -12,6 +14,11 @@ export const CompanyProvider = (props) => {
   const [withoutManager, setWithoutManager] = useState([]);
   //
   const [selected, setSelected] = useState({});
+  //
+  const [obsTypes, setObsTypes] = useState([]);
+  const [obsEditModal, SetObsEditModal] = useState(false);
+  const [obsCreateModal, setObsCreateModal] = useState(false);
+  const [selectedObs, setSelectedObs] = useState({});
 
   //functions
   const getAllPlaces = async () => {
@@ -59,42 +66,129 @@ export const CompanyProvider = (props) => {
     }
   };
 
+  const getObservationTypes = async () => {
+    const res = await Post({
+      api: Api.obsTypeAllApi,
+    });
+    if (!res.error) {
+      setObsTypes(res);
+    }
+  };
+
+  const createObsType = async (data) => {
+    const res = await Post({
+      api: Api.obsTypeCreate,
+      data: {
+        observationName: data.observationName,
+        observationCategory: data.observationCategory,
+      },
+    });
+    if (!res.error) {
+      setObsTypes(res);
+    }
+  };
+
+  const deleteObservationtype = async (data) => {
+    const res = await Post({
+      api: Api.obstypeDelete,
+      data: {
+        id: data,
+      },
+    });
+    if (!res.error) {
+      setObsTypes(res);
+    }
+  };
+
+  const editObservation = async () => {
+    const res = await Post({ api: Api.obsTypeEdit, data: selectedObs });
+
+    if (!res.error) {
+      SetObsEditModal(!obsEditModal);
+      setObsTypes(res);
+    }
+  };
+
+  // exported func
   const placeFunctions = async (data) => {
     switch (data.type) {
       //create
-      case "createPlace":
+      case placeFunc.createPlace:
         createPlace(data.payload);
         break;
       //
       //edit
-      case "closeEditModal":
+      case placeFunc.closeEditPlaceModal:
         setModal(!modal);
         break;
-      case "setEditModal":
+      case placeFunc.EditPlaceModal:
         setModal(!modal);
         setSelected(data.payload);
         break;
-      case "editSelected":
+      case placeFunc.editSelectedData:
         setSelected(data.payload);
         break;
-      case "editPlace":
+      case placeFunc.editPlace:
         editPlace();
         break;
       //delete
-      case "deletePlace":
+      case placeFunc.deletePlace:
         removePlace(data.payload);
         break;
       //querry
-      case "getAllPlaces":
+      case placeFunc.getPlaces:
         getAllPlaces();
         break;
-      case "withoutManager":
+      case placeFunc.getPlacesWithoutManager:
         getWithoutManager();
         break;
 
-      //global company pages manager
+      default:
+        alert(data.type);
+    }
+  };
+
+  const companyFunctions = async (data) => {
+    switch (data.type) {
+      //create
       case "setActivePage":
         setActivePage(data.payload);
+        break;
+      default:
+        alert(data.type);
+    }
+  };
+
+  // Obs func export
+  const obsFunctions = async (data) => {
+    switch (data.type) {
+      //create
+      case obsFunc.createObservationType:
+        createObsType(data.payload);
+        break;
+      case obsFunc.editObservationtype:
+        editObservation();
+        break;
+      case obsFunc.deleteObservationtype:
+        deleteObservationtype(data.payload);
+        break;
+      case obsFunc.editObservationtypeModal:
+        setSelectedObs(data.payload);
+        SetObsEditModal(!obsEditModal);
+        break;
+      case obsFunc.closeEditObservationTypeModal:
+        SetObsEditModal(!obsEditModal);
+        break;
+      case obsFunc.getObservationTypes:
+        getObservationTypes();
+        break;
+      case obsFunc.obsCreateModal:
+        setObsCreateModal(!obsCreateModal);
+        break;
+      case obsFunc.editObsSelected:
+        setSelectedObs(data.payload);
+        break;
+
       default:
         alert(data.type);
     }
@@ -104,11 +198,19 @@ export const CompanyProvider = (props) => {
     <CompanyContext.Provider
       value={{
         placeFunctions,
+        companyFunctions,
+        obsFunctions,
         modal,
         places,
         activePage,
         withoutManager,
         selected,
+        obsTypes,
+        placeFunc,
+        obsFunc,
+        obsCreateModal,
+        selectedObs,
+        obsEditModal,
       }}
     >
       {props.children}

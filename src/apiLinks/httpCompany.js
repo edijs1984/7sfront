@@ -10,3 +10,6 @@ export const placesEditApi = "/api/places/edit";
 // observation type
 
 export const obsTypeAllApi = "/api/obstypes/querry/all";
+export const obsTypeCreate = "/api/obstypes/create";
+export const obsTypeEdit = "/api/obstypes/edit";
+export const obstypeDelete = "/api/obstypes/delete";

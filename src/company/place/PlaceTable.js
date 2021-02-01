@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import { CompanyContext } from "./companyContetx";
-import { paginate } from "../helpers/paginate";
+import { CompanyContext } from "../companyContetx";
 import { Row, Table } from "react-bootstrap";
-import Paggination from "../comonComponents/Paggination";
+import { paginate } from "../../helpers/paginate";
+import Paggination from "../../comonComponents/Paggination";
 import EditPlaceModal from "./EditPlaceModal";
-import EditBtn from "../comonComponents/buttons/editButton";
-import DeleteBtn from "../comonComponents/buttons/deleteButton";
+import DeleteBtn from "../../comonComponents/buttons/deleteButton";
+import placeFunc from "../funcTypes/placeFunc";
 
 const PlaceTabel = () => {
   const { placeFunctions, places } = useContext(CompanyContext);
@@ -49,7 +49,7 @@ const PlaceTabel = () => {
                       style={{ textAlign: "center" }}
                       onDoubleClick={() => {
                         placeFunctions({
-                          type: "setEditModal",
+                          type: placeFunc.EditPlaceModal,
                           payload: {
                             id: pla._id,
                             placeName: pla.placeName,
@@ -78,7 +78,7 @@ const PlaceTabel = () => {
                         <DeleteBtn
                           onClick={() =>
                             placeFunctions({
-                              type: "deletePlace",
+                              type: placeFunc.deletePlace,
                               payload: {
                                 id: pla._id,
                                 userId: pla.responsible
