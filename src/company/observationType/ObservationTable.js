@@ -43,6 +43,7 @@ const ObsTabel = () => {
                 {obsType.map((item) => {
                   return (
                     <tr
+                      style={{ cursor: "pointer" }}
                       key={item._id}
                       onDoubleClick={() =>
                         obsFunctions({

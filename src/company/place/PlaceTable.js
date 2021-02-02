@@ -46,7 +46,7 @@ const PlaceTabel = () => {
                   return (
                     <tr
                       key={pla._id}
-                      style={{ textAlign: "center" }}
+                      style={{ textAlign: "center", cursor: "pointer" }}
                       onDoubleClick={() => {
                         placeFunctions({
                           type: placeFunc.EditPlaceModal,

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import Select from "react-select";
 import { CompanyContext } from "../../company/companyContetx";
-
+import placeFunc from "../../company/funcTypes/placeFunc";
 const PlaceDropdown = ({
   placeholder,
   valueSelected,
@@ -14,7 +14,7 @@ const PlaceDropdown = ({
   var options = [];
 
   useEffect(() => {
-    placeFunctions({ type: "getAllPlaces" });
+    placeFunctions({ type: placeFunc.getPlaces });
   }, []);
 
   if (places)

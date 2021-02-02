@@ -27,7 +27,8 @@ import Settings from "./settings/settings";
 import SingleAuditResult from "./audit/auditPages/singleAuditResult";
 import Myprofile from "./users/usersPages/MyProfile";
 import Tasks from "./tasks/taskPages.js/tasks";
-import Company from "./company/Company";
+import ObservationType from "./company/observationType/Observationtype";
+import Places from "./company/Places";
 
 // app
 const App = () => {
@@ -43,12 +44,6 @@ const App = () => {
                   <Container fluid>
                     <Switch>
                       <Route path="/login" exact component={LoginForm} />
-                      {/* 
-                                  <AuthRoute
-                                  path="/dashboard"
-                                  exact
-                                  component={ChartDashboard}
-                                /> */}
                       <AdminRoutes
                         path="/user/create"
                         exact
@@ -59,19 +54,19 @@ const App = () => {
                         exact
                         component={Myprofile}
                       />
-                      {/* <AuthRoute path="/audit" exact component={Audit} />
-                          <AuthRoute
-                          path="/auditresult"
-                          exact
-                          component={SingleAuditResult}
-                          /> */}
+                      <AuthRoute path="/audit" exact component={Audit} />
                       <AuthRoute path="/tasks" exact component={Tasks} />
                       <AdminRoutes
                         path="/settings"
                         exact
                         component={Settings}
                       />
-                      <AdminRoutes path="/company" exact component={Company} />
+                      <AdminRoutes path="/places" exact component={Places} />
+                      <AdminRoutes
+                        path="/obstypes"
+                        exact
+                        component={ObservationType}
+                      />
                       <AdminRoutes
                         path="/auditrulles"
                         ecact

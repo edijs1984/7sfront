@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Button, Table, ListGroup } from "react-bootstrap";
 import { AuditContext } from "../auditContext";
 import SettingsMenuBar from "../../comonComponents/settingMenuBar";
+import DeleteBtn from "../../comonComponents/buttons/deleteButton";
 const RullesTable = () => {
   const { auditRulles, auditFunctions } = useContext(AuditContext);
 
@@ -17,7 +18,7 @@ const RullesTable = () => {
             marginBottom: "2%",
           }}
         >
-          Audit Rulles
+          5S Audit Rulles
         </h1>
         <Button
           onClick={() => auditFunctions({ type: "createModal" })}
@@ -40,13 +41,19 @@ const RullesTable = () => {
               <td>Inspectable</td>
               <td>Rulles</td>
               <td>Points</td>
-              <td>Edit</td>
+              <td>Delete</td>
             </tr>
           </thead>
           <tbody>
             {auditRulles.map((item) => {
               return (
-                <tr key={item._id}>
+                <tr
+                  style={{ cursor: "pointer" }}
+                  key={item._id}
+                  onDoubleClick={() =>
+                    auditFunctions({ type: "editRulles", payload: item })
+                  }
+                >
                   <td
                     style={{
                       verticalAlign: "middle",
@@ -73,16 +80,16 @@ const RullesTable = () => {
                   </td>
                   <td>
                     <ul>
-                      <li>{item.rating[0].rulle1}</li>
-                      <li>{item.rating[1].rulle2}</li>
-                      <li>{item.rating[2].rulle3}</li>
+                      <li>{item.rulle1}</li>
+                      <li>{item.rulle2}</li>
+                      <li>{item.rulle3}</li>
                     </ul>
                   </td>
                   <td>
                     <ListGroup>
-                      <li>{item.rating[0].point1}</li>
-                      <li>{item.rating[1].point2}</li>
-                      <li>{item.rating[2].point3}</li>
+                      <li>{item.point1}</li>
+                      <li>{item.point2}</li>
+                      <li>{item.point3}</li>
                     </ListGroup>
                   </td>
                   <td
@@ -92,7 +99,7 @@ const RullesTable = () => {
                       textAlign: "center",
                     }}
                   >
-                    <Button
+                    {/* <Button
                       size="sm"
                       variant="warning"
                       onClick={() =>
@@ -100,19 +107,15 @@ const RullesTable = () => {
                       }
                     >
                       Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="danger"
+                    </Button> */}
+                    <DeleteBtn
                       onClick={() =>
                         auditFunctions({
-                          type: "delteRulles",
+                          type: "deleteRulles",
                           payload: item._id,
                         })
                       }
-                    >
-                      Delete
-                    </Button>
+                    />
                   </td>
                 </tr>
               );

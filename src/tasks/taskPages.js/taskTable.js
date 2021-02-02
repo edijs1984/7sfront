@@ -46,7 +46,7 @@ const TaskTable = () => {
             return (
               <tr
                 key={item._id}
-                style={{ textAlign: "center" }}
+                style={{ textAlign: "center", cursor: "pointer" }}
                 onDoubleClick={() =>
                   taskFunctions({
                     type: "editTaskModal",

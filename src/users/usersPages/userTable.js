@@ -45,7 +45,7 @@ const UserTable = () => {
             return (
               <tr
                 key={item._id}
-                style={{ textAlign: "center" }}
+                style={{ textAlign: "center", cursor: "pointer" }}
                 onDoubleClick={() => {
                   userFunctions({
                     type: "editUserModal",

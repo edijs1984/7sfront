@@ -7,6 +7,8 @@ export const AuditProvider = (props) => {
   const [auditRulles, setAuditRulles] = useState([]);
   const [familyOptions, setFamilyOptions] = useState([]);
   const [createModal, setCreateModal] = useState(false);
+  const [selectedRulle, setSelectedRulle] = useState();
+  const [editRullesModal, setEditRullesModal] = useState(false);
 
   const getRulles = async () => {
     const res = await Post({
@@ -23,21 +25,56 @@ export const AuditProvider = (props) => {
   };
 
   const createRulles = async (data) => {
-    await Post({
+    const res = await Post({
       api: Api.auditRullesCreateApi,
       data: {
         sofs: data.family,
         issue: data.issue,
         inspectable: data.inspectable,
-        rating: [
-          { point1: data.point1, rulle1: data.rulle1 },
-          { point2: data.point2, rulle2: data.rulle2 },
-          { point3: data.point3, rulle3: data.rulle3 },
-        ],
+        point1: data.point1,
+        rulle1: data.rulle1,
+        point2: data.point2,
+        rulle2: data.rulle2,
+        point3: data.point3,
+        rulle3: data.rulle3,
       },
-      message: "Rulle created",
-      notifytrue: true,
     });
+    if (!res.error) {
+      setAuditRulles(res);
+    }
+  };
+
+  const auditRullesdelete = async (value) => {
+    const res = await Post({
+      api: Api.auditRullesDeleteApi,
+      data: { id: value },
+    });
+
+    if (!res.error) {
+      setAuditRulles(res);
+    }
+  };
+
+  const editAuditRulle = async () => {
+    const res = await Post({
+      api: Api.auditRullesEditApi,
+      data: {
+        id: selectedRulle._id,
+        issue: selectedRulle.issue,
+        inspectable: selectedRulle.inspectable,
+        rulle1: selectedRulle.rulle1,
+        point1: selectedRulle.point1,
+        rulle2: selectedRulle.rulle2,
+        point2: selectedRulle.point2,
+        rulle3: selectedRulle.rulle3,
+        point3: selectedRulle.point3,
+        sofs: selectedRulle.sofs,
+      },
+    });
+    if (!res.error) {
+      setAuditRulles(res);
+      setEditRullesModal(!editRullesModal);
+    }
   };
 
   const auditFunctions = async (data) => {
@@ -48,24 +85,24 @@ export const AuditProvider = (props) => {
       case "getFamilyOptions":
         getFamilyoptions();
         break;
+      case "editSelectedRulle":
+        setSelectedRulle(data.payload);
+        break;
       case "createModal":
         setCreateModal(!createModal);
         break;
       case "deleteRulles":
-        console.log(data);
+        auditRullesdelete(data.payload);
         break;
       case "editRulles":
-        console.log(data);
-        console.log("open edit modal");
+        setSelectedRulle(data.payload);
+        setEditRullesModal(!editRullesModal);
         break;
-      case "createFamilyOptions":
-        console.log(data);
+      case "closeEditModal":
+        setEditRullesModal(!editRullesModal);
         break;
-      case "editFamilyOptions":
-        console.log(data);
-        break;
-      case "deleteFamilyOptions":
-        console.log(data);
+      case "editRulle":
+        editAuditRulle();
         break;
       case "createRulle":
         createRulles(data.payload);
@@ -78,7 +115,14 @@ export const AuditProvider = (props) => {
 
   return (
     <AuditContext.Provider
-      value={{ auditRulles, familyOptions, auditFunctions, createModal }}
+      value={{
+        auditRulles,
+        familyOptions,
+        auditFunctions,
+        selectedRulle,
+        createModal,
+        editRullesModal,
+      }}
     >
       {props.children}
     </AuditContext.Provider>

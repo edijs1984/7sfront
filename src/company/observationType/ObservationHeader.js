@@ -15,7 +15,6 @@ const ObservationHeader = () => {
         </Col>
         <Col style={{ marginTop: "1%", marginLeft: "-1%" }}>
           <Button
-            variant="warning"
             size="sm"
             onClick={() => obsFunctions({ type: funcTypes.obsCreateModal })}
           >
