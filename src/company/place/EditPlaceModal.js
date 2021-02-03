@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
-import { CompanyContext } from "./companyContetx";
-import CustomInput from "../comonComponents/CustomInput";
-import UserDropdown from "../comonComponents/dropdowns/userDropdown";
+import { CompanyContext } from "../companyContetx";
+import CustomInput from "../../comonComponents/CustomInput";
+import UserDropdown from "../../comonComponents/dropdowns/userDropdown";
+import placeFunc from "../funcTypes/placeFunc";
 
 const EditPlaceModal = () => {
   const { modal, placeFunctions, selected } = useContext(CompanyContext);
@@ -10,7 +11,7 @@ const EditPlaceModal = () => {
   const Submit = (e) => {
     e.preventDefault();
     placeFunctions({
-      type: "editPlace",
+      type: placeFunc.editPlace,
     });
   };
   return (
@@ -18,7 +19,7 @@ const EditPlaceModal = () => {
       <Modal
         size="sm"
         show={modal}
-        onHide={() => placeFunctions({ type: "closeEditModal" })}
+        onHide={() => placeFunctions({ type: placeFunc.closeEditPlaceModal })}
         aria-labelledby="example-modal-sizes-title-sm"
       >
         <Modal.Header closeButton>
@@ -34,7 +35,7 @@ const EditPlaceModal = () => {
                 value={selected.placeName}
                 onChange={(e) =>
                   placeFunctions({
-                    type: "editSelected",
+                    type: placeFunc.editSelectedData,
                     payload: { ...selected, placeName: e },
                   })
                 }
@@ -47,7 +48,7 @@ const EditPlaceModal = () => {
               <UserDropdown
                 onChange={(e) =>
                   placeFunctions({
-                    type: "editSelected",
+                    type: placeFunc.editSelectedData,
                     payload: { ...selected, user: e },
                   })
                 }

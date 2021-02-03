@@ -1,50 +1,58 @@
 import React from "react";
 
-import { Button, Row, Card } from "react-bootstrap";
+import { Button, Row, Col, Container } from "react-bootstrap";
 
-import "./settings.css";
+import {
+  FaQuestion,
+  FaLocationArrow,
+  FaUserAlt,
+  FaListAlt,
+} from "react-icons/fa";
+
 import { Link } from "react-router-dom";
 const Settings = () => {
+  const cardStyle = {
+    textAlign: "center",
+    backgroundColor: "#2f3c48",
+    color: "white",
+    border: "none",
+    borderRadius: 1,
+  };
+
+  const btnStyle = {
+    width: "80%",
+  };
+
   return (
     <React.Fragment>
-      <div className="settingsGrid">
-        <Row>
-          <Row>
-            <div>
-              <Button
-                variant={"primary"}
-                style={{ height: "100%", width: "80%" }}
-                as={Link}
-                to="/company"
-              >
-                <Card size="massive" color="orange" />
-
-                <h2>Company Management</h2>
-              </Button>
-            </div>
-            <div>
-              <Button
-                style={{ height: "100%", width: "80%" }}
-                as={Link}
-                to="/user/create"
-              >
-                <Card size="massive" color="orange" />
-                <h2>User Management</h2>
-              </Button>
-            </div>
-            <div>
-              <Button
-                style={{ height: "100%", width: "80%" }}
-                as={Link}
-                to="/auditrulles"
-              >
-                <Card size="massive" color="orange" />
-                <h2>Audit Management</h2>
-              </Button>
-            </div>
-          </Row>
+      <Container fluid>
+        <Row style={{ marginTop: "10%" }}>
+          <Col>
+            <Button size="lg" as={Link} to="/Places" style={btnStyle}>
+              <h2>Places</h2>
+              <FaLocationArrow size="30%" />
+            </Button>
+          </Col>
+          <Col>
+            <Button size="lg" as={Link} to="/obstypes" style={btnStyle}>
+              <h2>Observation types</h2>
+              <FaQuestion size="23%" />
+            </Button>
+          </Col>
+          <Col>
+            <Button size="lg" as={Link} to="/user/create" style={btnStyle}>
+              <h2>Users</h2>
+              <FaUserAlt size="31%" />
+            </Button>
+          </Col>
+          <Col>
+            <Button size="lg" as={Link} to="/auditrulles" style={btnStyle}>
+              <h2>Audit rulles</h2>
+              <FaListAlt size="31%" />
+            </Button>
+          </Col>
         </Row>
-      </div>
+      </Container>
     </React.Fragment>
   );
 };

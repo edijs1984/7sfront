@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuditContext } from "../auditContext";
 import { Modal, Form, Col, Row, Button } from "react-bootstrap";
-import BootstrapDropdownSFamily from "./BootstarpDropdownSFamily";
+import FiveSDropdown from "./fiveSDropdown";
+import CustomInput from "../../comonComponents/CustomInput";
+
 const CreateAuditRullesModal = () => {
-  const { auditFunctions, createModal, familyOptions } = useContext(
-    AuditContext
-  );
+  const { auditFunctions, createModal } = useContext(AuditContext);
   const [rulles, setRulles] = useState({
-    family: "",
     issue: "",
     inspectable: "",
     point1: "",
@@ -16,11 +15,11 @@ const CreateAuditRullesModal = () => {
     rulle2: "",
     point3: "",
     rulle3: "",
+    family: "",
   });
 
   const clearData = () => {
     setRulles({
-      family: "",
       issue: "",
       inspectable: "",
       point1: "",
@@ -29,6 +28,7 @@ const CreateAuditRullesModal = () => {
       rulle2: "",
       point3: "",
       rulle3: "",
+      family: "",
     });
   };
 
@@ -38,17 +38,7 @@ const CreateAuditRullesModal = () => {
     clearData();
   };
 
-  const disabledSubmit =
-    rulles.family === "" ||
-    rulles.issue === "" ||
-    rulles.inspectable === "" ||
-    rulles.point1 === "" ||
-    rulles.rulle1 === "" ||
-    rulles.point2 === "" ||
-    rulles.rulle3 === "" ||
-    rulles.point3 === ""
-      ? true
-      : false;
+  const disabledSubmit = rulles.family === "" ? true : false;
 
   return (
     <>
@@ -68,109 +58,101 @@ const CreateAuditRullesModal = () => {
             <Form.Row style={{ width: "50%" }}>
               <Form.Group as={Col} controlId="formGridEmail">
                 <Form.Label>Family</Form.Label>
-                <BootstrapDropdownSFamily
-                  value={familyOptions}
-                  funk={(e) => setRulles({ ...rulles, family: e })}
+                <FiveSDropdown
+                  onChange={(e) => setRulles({ ...rulles, family: e.value })}
                 />
               </Form.Group>
             </Form.Row>
             <Form.Row>
               <Form.Group as={Col} controlId="issue">
                 <Form.Label>Issue</Form.Label>
-                <Form.Control
+                <CustomInput
+                  required={true}
                   value={rulles.issue}
                   type="text"
                   placeholder="Issue"
-                  onChange={(e) =>
-                    setRulles({ ...rulles, issue: e.target.value })
-                  }
+                  onChange={(e) => setRulles({ ...rulles, issue: e })}
                 />
               </Form.Group>
 
               <Form.Group as={Col} controlId="inspectable">
                 <Form.Label>Inspectable</Form.Label>
-                <Form.Control
+                <CustomInput
+                  required={true}
                   value={rulles.inspectable}
                   type="text"
                   placeholder="Inspectable"
-                  onChange={(e) =>
-                    setRulles({ ...rulles, inspectable: e.target.value })
-                  }
+                  onChange={(e) => setRulles({ ...rulles, inspectable: e })}
                 />
               </Form.Group>
             </Form.Row>
             <Form.Row>
               <Form.Group xs={2} as={Col} controlId="1points">
                 <Form.Label>Points</Form.Label>
-                <Form.Control
+                <CustomInput
+                  required={true}
                   type="number"
-                  onChange={(e) =>
-                    setRulles({ ...rulles, point1: e.target.value })
-                  }
+                  onChange={(e) => setRulles({ ...rulles, point1: e })}
                   value={rulles.point1}
                 />
               </Form.Group>
 
               <Form.Group as={Col} controlId="1rulles">
                 <Form.Label>Rulles</Form.Label>
-                <Form.Control
+                <CustomInput
+                  required={true}
                   type="text"
                   value={rulles.rulle1}
-                  onChange={(e) =>
-                    setRulles({ ...rulles, rulle1: e.target.value })
-                  }
+                  onChange={(e) => setRulles({ ...rulles, rulle1: e })}
                 />
               </Form.Group>
             </Form.Row>
             <Form.Row>
               <Form.Group xs={2} as={Col} controlId="2points">
                 <Form.Label>Points</Form.Label>
-                <Form.Control
+                <CustomInput
+                  required={true}
                   type="number"
                   value={rulles.point2}
-                  onChange={(e) =>
-                    setRulles({ ...rulles, point2: e.target.value })
-                  }
+                  onChange={(e) => setRulles({ ...rulles, point2: e })}
                 />
               </Form.Group>
 
               <Form.Group as={Col} controlId="2rulles">
                 <Form.Label>Rulles</Form.Label>
-                <Form.Control
+                <CustomInput
+                  required={true}
                   type="text"
                   value={rulles.rulle2}
-                  onChange={(e) =>
-                    setRulles({ ...rulles, rulle2: e.target.value })
-                  }
+                  onChange={(e) => setRulles({ ...rulles, rulle2: e })}
                 />
               </Form.Group>
             </Form.Row>
             <Form.Row>
               <Form.Group xs={2} as={Col} controlId="3points">
                 <Form.Label>Points</Form.Label>
-                <Form.Control
+                <CustomInput
+                  required={true}
                   type="number"
                   value={rulles.point3}
-                  onChange={(e) =>
-                    setRulles({ ...rulles, point3: e.target.value })
-                  }
+                  onChange={(e) => setRulles({ ...rulles, point3: e })}
                 />
               </Form.Group>
-
               <Form.Group controlId="3rulles" as={Col}>
                 <Form.Label>Rulles</Form.Label>
-                <Form.Control
+                <CustomInput
+                  required={true}
                   type="text"
                   value={rulles.rulle3}
-                  onChange={(e) =>
-                    setRulles({ ...rulles, rulle3: e.target.value })
-                  }
+                  onChange={(e) => setRulles({ ...rulles, rulle3: e })}
                 />
               </Form.Group>
             </Form.Row>
-            <Button variant="primary" type="submit" disabled={disabledSubmit}>
-              Submit
-            </Button>
+            <Modal.Footer>
+              <Button variant="primary" type="submit" disabled={disabledSubmit}>
+                Submit
+              </Button>
+            </Modal.Footer>
           </Form>
         </Modal.Body>
       </Modal>

@@ -1,9 +1,19 @@
-import React, { useContext } from "react";
-import { Button, Table, ListGroup } from "react-bootstrap";
+import React, { useContext, useState } from "react";
+import { Button, Table, ListGroup, Row } from "react-bootstrap";
 import { AuditContext } from "../auditContext";
 import SettingsMenuBar from "../../comonComponents/settingMenuBar";
+import DeleteBtn from "../../comonComponents/buttons/deleteButton";
+import { paginate } from "../../helpers/paginate";
+import Paggination from "../../comonComponents/Paggination";
 const RullesTable = () => {
   const { auditRulles, auditFunctions } = useContext(AuditContext);
+  const [pageSize] = useState(4);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (data) => {
+    setCurrentPage(data);
+  };
+  const audit = paginate(auditRulles, currentPage, pageSize);
 
   return (
     <React.Fragment>
@@ -13,11 +23,11 @@ const RullesTable = () => {
           style={{
             color: "#2f3c48",
             marginTop: "2%",
-            fontWeight: "bold",
+
             marginBottom: "2%",
           }}
         >
-          Audit Rulles
+          5S Audit Rulles
         </h1>
         <Button
           onClick={() => auditFunctions({ type: "createModal" })}
@@ -40,13 +50,19 @@ const RullesTable = () => {
               <td>Inspectable</td>
               <td>Rulles</td>
               <td>Points</td>
-              <td>Edit</td>
+              <td>Delete</td>
             </tr>
           </thead>
           <tbody>
-            {auditRulles.map((item) => {
+            {audit.map((item) => {
               return (
-                <tr key={item._id}>
+                <tr
+                  style={{ cursor: "pointer" }}
+                  key={item._id}
+                  onDoubleClick={() =>
+                    auditFunctions({ type: "editRulles", payload: item })
+                  }
+                >
                   <td
                     style={{
                       verticalAlign: "middle",
@@ -73,16 +89,16 @@ const RullesTable = () => {
                   </td>
                   <td>
                     <ul>
-                      <li>{item.rating[0].rulle1}</li>
-                      <li>{item.rating[1].rulle2}</li>
-                      <li>{item.rating[2].rulle3}</li>
+                      <li>{item.rulle1}</li>
+                      <li>{item.rulle2}</li>
+                      <li>{item.rulle3}</li>
                     </ul>
                   </td>
                   <td>
                     <ListGroup>
-                      <li>{item.rating[0].point1}</li>
-                      <li>{item.rating[1].point2}</li>
-                      <li>{item.rating[2].point3}</li>
+                      <li>{item.point1}</li>
+                      <li>{item.point2}</li>
+                      <li>{item.point3}</li>
                     </ListGroup>
                   </td>
                   <td
@@ -92,33 +108,28 @@ const RullesTable = () => {
                       textAlign: "center",
                     }}
                   >
-                    <Button
-                      size="sm"
-                      variant="warning"
-                      onClick={() =>
-                        auditFunctions({ type: "editRulles", payload: item })
-                      }
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="danger"
+                    <DeleteBtn
                       onClick={() =>
                         auditFunctions({
-                          type: "delteRulles",
+                          type: "deleteRulles",
                           payload: item._id,
                         })
                       }
-                    >
-                      Delete
-                    </Button>
+                    />
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </Table>
+        <Row className="justify-content-md-center">
+          <Paggination
+            pageSize={pageSize}
+            count={auditRulles.length}
+            onPageChange={handlePageChange}
+            currentPage={currentPage}
+          />
+        </Row>
       </div>
     </React.Fragment>
   );

@@ -9,8 +9,13 @@ const SettingsMenuBar = () => {
     <div style={{ marginTop: "1%" }}>
       <Nav variant="tabs" activeKey={path}>
         <Nav.Item style={{ color: "red" }}>
-          <Nav.Link href="/company" as={Link} to="/company">
-            Company
+          <Nav.Link href="/places" as={Link} to="/places">
+            Places
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link href="/obstypes" as={Link} to="/obstypes">
+            Observation types
           </Nav.Link>
         </Nav.Item>
         <Nav.Item>

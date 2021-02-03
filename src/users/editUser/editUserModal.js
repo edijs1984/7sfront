@@ -27,7 +27,7 @@ const EditUserModal = () => {
         </Modal.Header>
         <Modal.Body>
           <Container>
-            <div style={{ width: "70%", margin: "10%" }}>
+            <div style={{ margin: "5%" }}>
               <Form onSubmit={Submit}>
                 <Form.Group controlId="formHorizontalEmail">
                   <Form.Label>Email</Form.Label>
@@ -43,7 +43,6 @@ const EditUserModal = () => {
                     value={selected.email}
                   />
                 </Form.Group>
-
                 <Form.Group controlId="formHorizontalName">
                   <Form.Label>Name</Form.Label>
                   <CustomInput

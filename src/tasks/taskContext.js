@@ -1,7 +1,7 @@
 import React, { useState, createContext } from "react";
 import { Post, User } from "../helpers/axioPost";
 import * as Api from "../apiLinks/httpTasks";
-import * as Obs from "../apiLinks/httpPlaces";
+import * as Obs from "../apiLinks/httpCompany";
 //
 export const TaskContext = createContext();
 //
