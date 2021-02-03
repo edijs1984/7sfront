@@ -14,7 +14,7 @@ const ObservationType = () => {
   return (
     <React.Fragment>
       <SettingsMenuBar />
-      <Container style={{ width: "80%" }}>
+      <Container>
         <div>
           <ObservationHeader />
           <ObsTabel />

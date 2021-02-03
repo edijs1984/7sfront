@@ -1,10 +1,19 @@
-import React, { useContext } from "react";
-import { Button, Table, ListGroup } from "react-bootstrap";
+import React, { useContext, useState } from "react";
+import { Button, Table, ListGroup, Row } from "react-bootstrap";
 import { AuditContext } from "../auditContext";
 import SettingsMenuBar from "../../comonComponents/settingMenuBar";
 import DeleteBtn from "../../comonComponents/buttons/deleteButton";
+import { paginate } from "../../helpers/paginate";
+import Paggination from "../../comonComponents/Paggination";
 const RullesTable = () => {
   const { auditRulles, auditFunctions } = useContext(AuditContext);
+  const [pageSize] = useState(4);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageChange = (data) => {
+    setCurrentPage(data);
+  };
+  const audit = paginate(auditRulles, currentPage, pageSize);
 
   return (
     <React.Fragment>
@@ -14,7 +23,7 @@ const RullesTable = () => {
           style={{
             color: "#2f3c48",
             marginTop: "2%",
-            fontWeight: "bold",
+
             marginBottom: "2%",
           }}
         >
@@ -45,7 +54,7 @@ const RullesTable = () => {
             </tr>
           </thead>
           <tbody>
-            {auditRulles.map((item) => {
+            {audit.map((item) => {
               return (
                 <tr
                   style={{ cursor: "pointer" }}
@@ -99,15 +108,6 @@ const RullesTable = () => {
                       textAlign: "center",
                     }}
                   >
-                    {/* <Button
-                      size="sm"
-                      variant="warning"
-                      onClick={() =>
-                        auditFunctions({ type: "editRulles", payload: item })
-                      }
-                    >
-                      Edit
-                    </Button> */}
                     <DeleteBtn
                       onClick={() =>
                         auditFunctions({
@@ -122,6 +122,14 @@ const RullesTable = () => {
             })}
           </tbody>
         </Table>
+        <Row className="justify-content-md-center">
+          <Paggination
+            pageSize={pageSize}
+            count={auditRulles.length}
+            onPageChange={handlePageChange}
+            currentPage={currentPage}
+          />
+        </Row>
       </div>
     </React.Fragment>
   );

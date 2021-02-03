@@ -6,11 +6,14 @@ import Paggination from "../../comonComponents/Paggination";
 import EditPlaceModal from "./EditPlaceModal";
 import DeleteBtn from "../../comonComponents/buttons/deleteButton";
 import placeFunc from "../funcTypes/placeFunc";
-
+import { UserContext } from "../../users/userContext";
+import { countUsers, countObs } from "../../helpers/countUsers";
+import { TaskContext } from "../../tasks/taskContext";
 const PlaceTabel = () => {
   const { placeFunctions, places } = useContext(CompanyContext);
-  const [selected, setSelected] = useState({});
-  const [pageSize] = useState(8);
+  const { allUsers } = useContext(UserContext);
+  const { tasks } = useContext(TaskContext);
+  const [pageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePageChange = (data) => {
@@ -36,6 +39,7 @@ const PlaceTabel = () => {
                 <tr>
                   <td>Place Name</td>
                   <td>Users assigned</td>
+                  <td>Open observations</td>
                   <td>Responsible</td>
 
                   <td>Delete</td>
@@ -66,7 +70,8 @@ const PlaceTabel = () => {
                       }}
                     >
                       <td>{pla.placeName}</td>
-                      <td></td>
+                      <td>{countUsers(allUsers, pla._id)}</td>
+                      <td>{countObs(tasks, pla._id)}</td>
                       <td>
                         {pla.responsible !== null ? (
                           pla.responsible.name
@@ -107,7 +112,7 @@ const PlaceTabel = () => {
         )}
       </Row>
 
-      <EditPlaceModal selected={selected} />
+      <EditPlaceModal />
     </div>
   );
 };

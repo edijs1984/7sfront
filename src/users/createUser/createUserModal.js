@@ -15,7 +15,7 @@ const CreateUserModal = () => {
     manager: false,
     responsibleForPlace: [],
   });
-  console.log(responsible);
+
   const create = async (e) => {
     e.preventDefault();
     responsible.forEach((i) => user.responsibleForPlace.push(i.value));

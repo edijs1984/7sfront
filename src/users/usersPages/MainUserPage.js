@@ -13,9 +13,7 @@ const MainUserPage = () => {
   return (
     <div>
       <SettingsMenuBar />
-      <h1 style={{ fontWeight: "bold", color: "#2f3c48", padding: "1%" }}>
-        Users
-      </h1>
+      <h1 style={{ color: "#2f3c48", padding: "1%" }}>Users</h1>
       <Button
         onClick={() => userFunctions({ type: "createUserModal" })}
         style={{ marginBottom: "1%", marginLeft: "1%" }}

@@ -2,15 +2,17 @@ import React, { useContext, useState } from "react";
 import { Table, Row } from "react-bootstrap";
 import DeleteBtn from "../../comonComponents/buttons/deleteButton";
 import { CompanyContext } from "../companyContetx";
+import { TaskContext } from "../../tasks/taskContext";
 import { paginate } from "../../helpers/paginate";
 import Paggination from "../../comonComponents/Paggination";
+import { countObsTypes } from "../../helpers/countUsers";
 import ObsTypeCreate from "./ObsTypeCreate";
 import obsFunc from "../funcTypes/obsFunc";
 import ObsTypeEdit from "./ObsTypeEdit";
 const ObsTabel = () => {
   const { obsFunctions, obsTypes } = useContext(CompanyContext);
-
-  const [pageSize] = useState(6);
+  const { tasks } = useContext(TaskContext);
+  const [pageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
   const handlePageChange = (data) => {
@@ -36,6 +38,7 @@ const ObsTabel = () => {
                 <tr style={{ textAlign: "center" }}>
                   <td>Observation type</td>
                   <td>Sub-type</td>
+                  <td>Open observations</td>
                   <td>Delete</td>
                 </tr>
               </thead>
@@ -43,7 +46,7 @@ const ObsTabel = () => {
                 {obsType.map((item) => {
                   return (
                     <tr
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: "pointer", textAlign: "center" }}
                       key={item._id}
                       onDoubleClick={() =>
                         obsFunctions({
@@ -76,7 +79,7 @@ const ObsTabel = () => {
                             })
                           : ""}
                       </td>
-
+                      <td>{countObsTypes(tasks, item._id)}</td>
                       <td
                         style={{
                           verticalAlign: "middle",
@@ -100,16 +103,18 @@ const ObsTabel = () => {
                 })}
               </tbody>
             </Table>
-            <Paggination
-              pageSize={pageSize}
-              count={obsTypes.length}
-              onPageChange={handlePageChange}
-              currentPage={currentPage}
-            />
             <ObsTypeCreate />
             <ObsTypeEdit />
           </React.Fragment>
         )}
+      </Row>
+      <Row className="justify-content-md-center">
+        <Paggination
+          pageSize={pageSize}
+          count={obsTypes.length}
+          onPageChange={handlePageChange}
+          currentPage={currentPage}
+        />
       </Row>
     </div>
   );

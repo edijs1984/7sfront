@@ -72,7 +72,7 @@ const App = () => {
                         ecact
                         component={AuditRulles}
                       />
-                      <Redirect to="/quicktasks" />
+                      <Redirect to="/tasks" />
                     </Switch>
                   </Container>
                 </Router>

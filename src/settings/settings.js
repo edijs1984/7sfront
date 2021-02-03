@@ -40,7 +40,7 @@ const Settings = () => {
             </Button>
           </Col>
           <Col>
-            <Button size="lg" as={Link} to="/Places" style={btnStyle}>
+            <Button size="lg" as={Link} to="/user/create" style={btnStyle}>
               <h2>Users</h2>
               <FaUserAlt size="31%" />
             </Button>
