@@ -5,11 +5,15 @@ import { changedate } from "../../helpers/editDate";
 import ArchBtn from "../../comonComponents/buttons/archiveButton";
 import { paginate } from "../../helpers/paginate";
 import Paggination from "../../comonComponents/Paggination";
+import ImageModal from "./imageModal";
 
 const TaskTable = () => {
   const { taskFunctions, tasks } = useContext(TaskContext);
   const [pageSize] = useState(14);
   const [currentPage, setCurrentPage] = useState(1);
+  const [imgModal, setImgModal] = useState(false);
+  const [img, setImg] = useState([]);
+  console.log(tasks);
 
   const handlePageChange = (data) => {
     setCurrentPage(data);
@@ -42,6 +46,7 @@ const TaskTable = () => {
               <td>Place</td>
               <td>Responsible</td>
               <td>Comment</td>
+              <td>Images</td>
               <td>Observation</td>
               <td>Observation Category</td>
               <td>Creator</td>
@@ -93,6 +98,17 @@ const TaskTable = () => {
                   <td>{item.responsible ? item.responsible.name : ""}</td>
                   <td>{item.comment}</td>
                   <td>
+                    <Button
+                      size="sm"
+                      onClick={() => {
+                        setImg(item.image);
+                        setImgModal(!imgModal);
+                      }}
+                    >
+                      {item.image.length}
+                    </Button>
+                  </td>
+                  <td>
                     {item.observationtype
                       ? item.observationtype.observationName
                       : ""}
@@ -115,6 +131,11 @@ const TaskTable = () => {
           </tbody>
         </Table>
       </Row>
+      <ImageModal
+        img={img}
+        setOpenImgModal={() => setImgModal(!imgModal)}
+        openImgModal={imgModal}
+      />
       <Row className="justify-content-md-center">
         <Paggination
           pageSize={pageSize}

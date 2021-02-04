@@ -1,5 +1,5 @@
 import React, { useState, createContext } from "react";
-import { Post, User } from "../helpers/axioPost";
+import { Post, User, Company, PostImage } from "../helpers/axioPost";
 import * as Api from "../apiLinks/httpTasks";
 import * as Obs from "../apiLinks/httpCompany";
 //
@@ -26,10 +26,17 @@ export const TaskProvider = (props) => {
   };
 
   const createTask = async (dataposted) => {
+    if (dataposted.fileSelected !== "") {
+      await PostImage({
+        file: dataposted.fileSelected,
+        fileName: dataposted.image[0],
+      });
+    }
     await Post({
       api: Api.taskCreateApi,
       data: { ...dataposted, creatorId: User._id },
     });
+
     getTasks();
   };
 

@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { Company } from "../../helpers/axioPost";
 import { Modal, Form, Button, Row, Col } from "react-bootstrap";
 import PriorityDropdown from "../../comonComponents/dropdowns/priorityDropdown";
 import UserDropdown from "../../comonComponents/dropdowns/userDropdown";
@@ -24,10 +25,31 @@ const CreateTask = () => {
     priority: "",
     deadline: "",
     status: "",
+    fileSelected: "",
+    image: [],
   });
+
+  const addImage = (value) => {
+    const fileName = Company + Date.now() + Math.random() * 9999 + ".jpg";
+    setNewTask({ ...newTask, fileSelected: value, image: [fileName] });
+  };
 
   const submitResult = () => {
     taskFunctions({ type: "createTask", payload: newTask });
+    setNewTask({
+      issue: "",
+      placeId: "",
+      creatorId: "",
+      responsibleId: "",
+      observationId: "",
+      status: "",
+      comment: "",
+      priority: "",
+      deadline: "",
+      status: "",
+      fileSelected: "",
+      image: [],
+    });
   };
 
   return (
@@ -142,7 +164,10 @@ const CreateTask = () => {
             <Col>
               <Form.File id="formcheck-api-regular">
                 <Form.File.Label>Select Image</Form.File.Label>
-                <Form.File.Input />
+                <input
+                  type="file"
+                  onChange={(e) => addImage(e.target.files[0])}
+                />
               </Form.File>
             </Col>
             <Col></Col>

@@ -23,7 +23,7 @@ const ObsTypeCreate = () => {
     setList([]);
     setObservationName("");
   };
-
+  console.log(obsCreateModal);
   const updateList = () => {
     list.push(category);
     setCategory("");

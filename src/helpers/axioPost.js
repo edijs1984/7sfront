@@ -9,7 +9,6 @@ const decodedToken = () => {
     return JwtDecode(localStorage.getItem("JwtToken"));
   }
 };
-export const token = localStorage.getItem("JwtToken");
 
 toast.configure({
   autoClose: 3000,
@@ -28,10 +27,12 @@ export const fetch = async ({ api }) => {
   );
   return res;
 };
+export const token = localStorage.getItem("JwtToken");
 export const UserName = token ? decodedToken().name : "";
 export const Admin = token ? decodedToken().isAdmin : "";
 export const User = token ? decodedToken() : "";
 export const Company = token ? decodedToken().company : "";
+export const Api = apiUrl;
 
 // functions
 
@@ -57,5 +58,18 @@ export const Post = async ({ api, data, message, notifytrue }) => {
   } catch (error) {
     badNotify(error.response.data);
     return { error: error };
+  }
+};
+
+export const PostImage = async ({ file, fileName }) => {
+  try {
+    const image = new FormData();
+    image.append("image", file, fileName);
+
+    await Axios.post(apiUrl + "/api/img/uploadimage", image, {
+      headers: { "Content-Type": "multipart-formData", "auth-token": token },
+    });
+  } catch (error) {
+    console.log(error);
   }
 };
