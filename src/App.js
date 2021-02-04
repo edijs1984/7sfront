@@ -29,6 +29,7 @@ import Myprofile from "./users/usersPages/MyProfile";
 import Tasks from "./tasks/taskPages.js/tasks";
 import ObservationType from "./company/observationType/Observationtype";
 import Places from "./company/Places";
+import Test from "./test";
 
 // app
 const App = () => {
@@ -54,6 +55,7 @@ const App = () => {
                         exact
                         component={Myprofile}
                       />
+                      <AuthRoute path="/test" exec component={Test} />
                       <AuthRoute path="/audit" exact component={Audit} />
                       <AuthRoute path="/tasks" exact component={Tasks} />
                       <AdminRoutes

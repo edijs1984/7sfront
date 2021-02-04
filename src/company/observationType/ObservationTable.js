@@ -9,6 +9,7 @@ import { countObsTypes } from "../../helpers/countUsers";
 import ObsTypeCreate from "./ObsTypeCreate";
 import obsFunc from "../funcTypes/obsFunc";
 import ObsTypeEdit from "./ObsTypeEdit";
+
 const ObsTabel = () => {
   const { obsFunctions, obsTypes } = useContext(CompanyContext);
   const { tasks } = useContext(TaskContext);
@@ -103,7 +104,6 @@ const ObsTabel = () => {
                 })}
               </tbody>
             </Table>
-            <ObsTypeCreate />
             <ObsTypeEdit />
           </React.Fragment>
         )}

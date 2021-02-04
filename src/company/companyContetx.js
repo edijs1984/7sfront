@@ -184,6 +184,7 @@ export const CompanyProvider = (props) => {
         break;
       case obsFunc.obsCreateModal:
         setObsCreateModal(!obsCreateModal);
+        console.log("jā");
         break;
       case obsFunc.editObsSelected:
         setSelectedObs(data.payload);
