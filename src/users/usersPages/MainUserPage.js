@@ -4,11 +4,16 @@ import UserTable from "./userTable";
 import { Button } from "react-bootstrap";
 import { UserContext } from "../userContext";
 import SettingsMenuBar from "../../comonComponents/settingMenuBar";
-
+import { TaskContext } from "../../tasks/taskContext";
 const MainUserPage = () => {
   const { userFunctions } = useContext(UserContext);
+  const { taskFunctions, tasks } = useContext(TaskContext);
   useEffect(() => {
     userFunctions({ type: "getAllUsers" });
+
+    if (tasks.length < 1) {
+      taskFunctions({ type: "getTasks" });
+    }
   }, []);
   return (
     <div>
