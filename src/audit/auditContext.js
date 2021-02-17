@@ -107,7 +107,6 @@ export const AuditProvider = (props) => {
       case "createRulle":
         createRulles(data.payload);
         break;
-
       default:
         console.log(data);
     }
