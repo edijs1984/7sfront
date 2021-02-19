@@ -3,7 +3,7 @@ import { apiUrl } from "../config.json";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import JwtDecode from "jwt-decode";
-
+import { setImg } from "../apiLinks/httpImg";
 const decodedToken = () => {
   if (localStorage.getItem("JwtToken")) {
     return JwtDecode(localStorage.getItem("JwtToken"));
@@ -66,7 +66,7 @@ export const PostImage = async ({ file, fileName }) => {
     const image = new FormData();
     image.append("image", file, fileName);
 
-    await Axios.post(apiUrl + "/api/img/uploadimage", image, {
+    await Axios.post(Api + setImg, image, {
       headers: { "Content-Type": "multipart-formData", "auth-token": token },
     });
   } catch (error) {
