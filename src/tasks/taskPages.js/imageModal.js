@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 import { Api, token } from "../../helpers/axioPost";
-import { getimg } from "../../apiLinks/httpImg";
+
 import ModalImage from "react-modal-image";
 const ImageModal = ({ openImgModal, setOpenImgModal, img }) => {
   const [image, setimage] = useState("");
@@ -17,7 +17,7 @@ const ImageModal = ({ openImgModal, setOpenImgModal, img }) => {
   const GetImage = async (value) => {
     setLoading(true);
     try {
-      await Axios.get(Api + getimg + img[value], {
+      await Axios.get(Api + "/img/serve/images" + img[value], {
         responseType: "arraybuffer",
         headers: { "auth-token": token },
       }).then((response) => {
