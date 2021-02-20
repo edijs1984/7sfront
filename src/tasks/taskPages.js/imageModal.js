@@ -17,7 +17,7 @@ const ImageModal = ({ openImgModal, setOpenImgModal, img }) => {
   const GetImage = async (value) => {
     setLoading(true);
     try {
-      await Axios.get(Api + "/img/serve/images" + img[value], {
+      await Axios.get(Api + "/img/serve/images/" + img[value], {
         responseType: "arraybuffer",
         headers: { "auth-token": token },
       }).then((response) => {
